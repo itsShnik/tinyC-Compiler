@@ -1,0 +1,1435 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=Big5">
+   <title></title>
+   <meta name="GENERATOR" content="Mozilla/3.01Gold (X11; I; Linux 2.0.0 i686) [Netscape]">
+</head>
+<body vlink="#51188E" text="#000000" link="#0000EF" bgcolor="#FFFFFF" alink="#FF0000">
+
+<h1>
+<hr width="100%"></h1>
+
+<h1 align="CENTER">Yacc/Bison</h1>
+
+<p>
+</p><hr width="100%"><p></p>
+
+<p>In order for Yacc/Bison to parse a language, the language must be described
+by a <i>context-free grammar</i>. The most common formal system for presenting
+such rules for humans to read is <i>Backus-Naur Form</i> or ``BNF'', which
+was developed in order to specify the language Algol 60. Any grammar expressed
+in BNF is a context-free grammar. The input to Yacc/Bison is essentially
+machine-readable BNF. </p>
+
+<p>Not all context-free languages can be handled by Yacc/Bison, only those
+that are LALR(1). In brief, this means that it must be possibly to tell
+how to parse any portion of an input string with just a single token of
+look-ahead. Strictly speaking, that is a description of an LR(1) grammar,
+and LALR(1) involves additional restrictions that are hard to explain simply;
+but it is rare in actual practice to find an LR(1) grammar that fails to
+be LALR(1). </p>
+
+<h2>An Overview</h2>
+
+<p>A formal grammar selects tokens only by their classifications: for example,
+if a rule mentions the terminal symbol `integer constant', it means that
+<i>any</i> integer constant is grammatically valid in that position. The
+precise value of the constant is irrelevant to how to parse the input:
+if <tt>x+4</tt> is grammatical then <tt>x+1</tt> or <tt>x+3989</tt> is
+equally grammatical. </p>
+
+<p>But the precise value is very important for what the input means once
+it is parsed. A compiler is useless if it fails to distinguish between
+4, 1 and 3989 as constants in the program! Therefore, each token has both
+a token type and a <i>semantic value</i>. </p>
+
+<p>The token type is a terminal symbol defined in the grammar, such as
+<tt>INTEGER</tt>, <tt>IDENTIFIER</tt> or <tt>','</tt>. It tells everything
+you need to know to decide where the token may validly appear and how to
+group it with other tokens. The grammar rules know nothing about tokens
+except their types. </p>
+
+<p>The semantic value has all the rest of the information about the meaning
+of the token, such as the value of an integer, or the name of an identifier.
+(A token such as <tt>','</tt> which is just punctuation doesn't need to
+have any semantic value.) </p>
+
+<p>For example, an input token might be classified as token type <tt>INTEGER</tt>
+and have the semantic value 4. Another input token might have the same
+token type <tt>INTEGER</tt> but value 3989. When a grammar rule says that
+<tt>INTEGER</tt> is allowed, either of these tokens is acceptable because
+each is an <tt>INTEGER</tt>. When the parser accepts the token, it keeps
+track of the token's semantic value. </p>
+
+<p>Each grouping can also have a semantic value as well as its nonterminal
+symbol. For example, in a calculator, an expression typically has a semantic
+value that is a number. In a compiler for a programming language, an expression
+typically has a semantic value that is a tree structure describing the
+meaning of the expression. </p>
+
+<p>As Yacc/Bison reads tokens, it pushes them onto a stack along with their
+semantic values. The stack is called the <i>parser stack</i>. Pushing a
+token is traditionally called <i>shifting</i>. </p>
+
+<p>But the stack does not always have an element for each token read. When
+the last <i>n</i> tokens and groupings shifted match the components of
+a grammar rule, they can be combined according to that rule. This is called
+<i>reduction</i>. Those tokens and groupings are replaced on the stack
+by a single grouping whose symbol is the result (left hand side) of that
+rule. Running the rule's action is part of the process of reduction, because
+this is what computes the semantic value of the resulting grouping. </p>
+
+<p>The Yacc/Bison parser reads a sequence of tokens as its input, and groups
+the tokens using the grammar rules. If the input is valid, the end result
+is that the entire token sequence reduces to a single grouping whose symbol
+is the grammar's start symbol. If we use a grammar for C, the entire input
+must be a `sequence of definitions and declarations'. If not, the parser
+reports a syntax error. </p>
+
+<p>The parser tries, by shifts and reductions, to reduce the entire input
+down to a single grouping whose symbol is the grammar's start-symbol. </p>
+
+<p>This kind of parser is known in the literature as a bottom-up parser.
+</p>
+
+<p>The function <tt>yyparse</tt> is implemented using a finite-state machine.
+The values pushed on the parser stack are not simply token type codes;
+they represent the entire sequence of terminal and nonterminal symbols
+at or near the top of the stack. The current state collects all the information
+about previous input which is relevant to deciding what to do next. </p>
+
+<p>Each time a look-ahead token is read, the current parser state together
+with the type of look-ahead token are looked up in a table. This table
+entry can say, ``Shift the look-ahead token.'' In this case, it also specifies
+the new parser state, which is pushed onto the top of the parser stack.
+Or it can say, ``Reduce using rule number <i>n</i>.'' This means that a
+certain of tokens or groupings are taken off the top of the stack, and
+replaced by one grouping. In other words, that number of states are popped
+from the stack, and one new state is pushed. </p>
+
+<p>There is one other alternative: the table can say that the look-ahead
+token is erroneous in the current state. This causes error processing to
+begin. </p>
+
+<h2>A Yacc/Bison Example</h2>
+
+<p>The following is a Yacc/Bison input file which defines a reverse polish
+notation calculator. The file created by Yacc/Bison simulates the calculator.
+The details of the example are explained in later sections. </p>
+
+<ul>
+<pre>/* Reverse polish notation calculator. */
+%{
+#define YYSTYPE double
+#include &lt;math.h&gt;
+%}
+%token NUM
+%% /* Grammar rules and actions follow */
+input : /* empty */
+   | input line
+;
+line : '\n'
+   | exp '\n'  { printf ("\t%.10g\n", $1); }
+;
+exp : NUM             { $$ = $1;         }
+   | exp exp '+'     { $$ = $1 + $2;    }
+   | exp exp '-'     { $$ = $1 - $2;    }
+   | exp exp '*'     { $$ = $1 * $2;    }
+   | exp exp '/'     { $$ = $1 / $2;    }
+   /* Exponentiation */
+   | exp exp '^'     { $$ = pow ($1, $2); }
+   /* Unary minus    */
+  | exp 'n'         { $$ = -$1;        }
+;
+%%
+/* Lexical analyzer returns a double floating point 
+   number on the stack and the token NUM, or the ASCII
+   character read if not a number.  Skips all blanks
+   and tabs, returns 0 for EOF. */
+#include &lt;ctype.h&gt;
+yylex ()
+{ int c;
+  /* skip white space  */
+  while ((c = getchar ()) == ' ' || c == '\t')  
+    ;
+  /* process numbers   */
+  if (c == '.' || isdigit (c))                
+    {
+      ungetc (c, stdin);
+      scanf ("%lf", &amp;yylval);
+      return NUM;
+    }
+  /* return end-of-file  */
+  if (c == EOF)                            
+    return 0;
+  /* return single chars */
+  return c;  
+}
+main ()     /* The ``Main'' function to make this stand-alone  */
+{
+  yyparse ();
+}
+#include &lt;stdio.h&gt;
+yyerror (s)  /* Called by yyparse on error */
+     char *s;
+{
+  printf ("%s\n", s);
+}
+</pre>
+</ul>
+
+<h2>The Yacc/Bison Input File</h2>
+
+<p>Yacc/Bison takes as input a context-free grammar specification and produces
+a C-language function that recognizes correct instances of the grammar.
+The input file for the Yacc/Bison utility is a <i>Yacc/Bison grammar file</i>.
+The Yacc/Bison grammar input file conventionally has a name ending in <tt>.y</tt>.
+</p>
+
+<p>A Yacc/Bison grammar file has four main sections, shown here with the
+appropriate delimiters: </p>
+
+<ul>
+<pre><tt>%{
+</tt><i>C declarations
+</i><tt>%}
+</tt><i>Yacc/Bison declarations
+</i><tt>%%
+</tt><i>Grammar rules
+</i><tt>%%
+</tt><i>Additional C code</i></pre>
+</ul>
+
+<p>Comments enclosed in <tt>/* ... */</tt> may appear in any of the sections.
+The <tt>%%</tt>, <tt>%{</tt> and <tt>%</tt>} are punctuation that appears
+in every Yacc/Bison grammar file to separate the sections. </p>
+
+<p>The C declarations may define types and variables used in the actions.
+You can also use preprocessor commands to define macros used there, and
+use <tt>\#include</tt> to include header files that do any of these things.
+</p>
+
+<p>The Yacc/Bison declarations declare the names of the terminal and nonterminal
+symbols, and may also describe operator precedence and the data types of
+semantic values of various symbols. </p>
+
+<p>The grammar rules define how to construct each nonterminal symbol from
+its parts. </p>
+
+<p>The additional C code can contain any C code you want to use. Often
+the definition of the lexical analyzer <tt>yylex</tt> goes here, plus subroutines
+called by the actions in the grammar rules. In a simple program, all the
+rest of the program can go here. </p>
+
+<h3>The Declarations Section</h3>
+
+<h4>The C Declarations Section</h4>
+
+<p>The <i>C declarations</i> section contains macro definitions and declarations
+of functions and variables that are used in the actions in the grammar
+rules. These are copied to the beginning of the parser file so that they
+precede the definition of <tt>yylex</tt>. You can use <tt>#include</tt>
+to get the declarations from a header file. If you don't need any C declarations,
+you may omit the <tt>%{</tt> and <tt>%</tt>} delimiters that bracket this
+section. </p>
+
+<h4>The Yacc/Bison Declarations Section</h4>
+
+<p>The <i>Yacc/Bison declarations</i> section defines symbols of the grammar.
+<i>Symbols</i> in Yacc/Bison grammars represent the grammatical classifications
+of the language. </p>
+
+<p>Definitions are provided for the terminal and nonterminal symbols, to
+specify the precedence and associativity of the operators, and the data
+types of semantic values. </p>
+
+<p>The first rule in the file also specifies the start symbol, by default.
+If you want some other symbol to be the start symbol, you must declare
+it explicitly. </p>
+
+<p>Symbol names can contain letters, digits (not at the beginning), underscores
+and periods. Periods make sense only in nonterminals. </p>
+
+<p>A <i>terminal symbol</i> (also known as a <i>token type</i>) represents
+a class of syntactically equivalent tokens. You use the symbol in grammar
+rules to mean that a token in that class is allowed. The symbol is represented
+in the Yacc/Bison parser by a numeric code, and the <tt>yylex</tt> function
+returns a token type code to indicate what kind of token has been read.
+You don't need to know what the code value is; you can use the symbol to
+stand for it. By convention, it should be all upper case. All token type
+names (but not single-character literal tokens such as <tt>'+'</tt> and
+<tt>'*'</tt>) must be declared. </p>
+
+<p>There are two ways of writing terminal symbols in the grammar: </p>
+
+<ul>
+<li>A <i>named token type</i> is written with an identifier, it should
+be all upper case such as, <tt>INTEGER</tt>, <tt>IDENTIFIER</tt>, <tt>IF</tt>
+or <tt>RETURN</tt>. A terminal symbol that stands for a particular keyword
+in the language should be named after that keyword converted to upper case.
+Each such name must be defined with a Yacc/Bison declaration such as </li>
+
+<pre>%token INTEGER IDENTIFIER
+</pre>
+
+<p>The terminal symbol <tt>error</tt> is reserved for error recovery. In
+particular, <tt>yylex</tt> should never return this value. </p>
+
+<li>A <i>character token type</i> (or <i>literal token</i>) is written
+in the grammar using the same syntax used in C for character constants;
+for example, <tt>'+'</tt> is a character token type. A character token
+type doesn't need to be declared unless you need to specify its semantic
+value data type, associativity, or precedence. </li>
+
+<p>By convention, a character token type is used only to represent a token
+that consists of that particular character. Thus, the token type <tt>'+'</tt>
+is used to represent the character <tt>+</tt> as a token. Nothing enforces
+this convention, but if you depart from it, your program will confuse other
+readers. </p>
+
+<p>All the usual escape sequences used in character literals in C can be
+used in Yacc/Bison as well, but you must not use the null character as
+a character literal because its ASCII code, zero, is the code <tt>yylex</tt>
+returns for end-of-input. </p>
+</ul>
+
+<p>How you choose to write a terminal symbol has no effect on its grammatical
+meaning. That depends only on where it appears in rules and on when the
+parser function returns that symbol. </p>
+
+<p>The value returned by <tt>yylex</tt> is always one of the terminal symbols
+(or 0 for end-of-input). Whichever way you write the token type in the
+grammar rules, you write it the same way in the definition of <tt>yylex</tt>.
+The numeric code for a character token type is simply the ASCII code for
+the character, so <tt>yylex</tt> can use the identical character constant
+to generate the requisite code. Each named token type becomes a C macro
+in the parser file, so <tt>yylex</tt> can use the name to stand for the
+code. (This is why periods don't make sense in terminal symbols.) </p>
+
+<p>If <tt>yylex</tt> is defined in a separate file, you need to arrange
+for the token-type macro definitions to be available there. Use the <tt>-d</tt>
+option when you run Yacc/Bison, so that it will write these macro definitions
+into a separate header file <tt><i>name</i>.tab.h</tt> which you can include
+in the other source files that need it. </p>
+
+<p>A <i>nonterminal symbol</i> stands for a class of syntactically equivalent
+groupings. The symbol name is used in writing grammar rules. By convention,
+it should be all lower case, such as <tt>expr</tt>, <tt>stmt</tt> or <tt>declaration</tt>.
+Nonterminal symbols must be declared if you need to specify which data
+type to use for the semantic value. </p>
+
+<h4>Token Type Names</h4>
+
+<p>The basic way to declare a token type name (terminal symbol) is as follows:
+</p>
+
+<pre>%token <i>name</i>
+</pre>
+
+<p>Yacc/Bison will convert this into a <tt>#define</tt> directive in the
+parser, so that the function <tt>yylex</tt> (if it is in this file) can
+use the name <i>name</i> to stand for this token type's code. </p>
+
+<p>Alternatively you can use <tt>%left</tt>, <tt>%right</tt>, or <tt>%nonassoc</tt>
+instead of <tt>%token</tt>, if you wish to specify precedence. </p>
+
+<p>You can explicitly specify the numeric code for a token type by appending
+an integer value in the field immediately following the token name: </p>
+
+<pre>%token NUM 300
+</pre>
+
+<p>It is generally best, however, to let Yacc/Bison choose the numeric
+codes for all token types. Yacc/Bison will automatically select codes that
+don't conflict with each other or with ASCII characters. </p>
+
+<p>In the event that the stack type is a union, you must augment the <tt>%token</tt>
+or other token declaration to include the data type alternative delimited
+by angle-brackets. For example: </p>
+
+<ul>
+<pre>%union {              /* define stack type */
+  double val;
+  symrec *tptr;
+}
+%token  NUM      /* define token NUM and its type */</pre>
+</ul>
+
+<h4>Operator Precedence</h4>
+
+<p>Use the <tt>%left</tt>, <tt>%right</tt> or <tt>%nonassoc</tt> declaration
+to declare a token and specify its precedence and associativity, all at
+once. These are called <i>precedence declarations</i>. </p>
+
+<p>The syntax of a precedence declaration is the same as that of <tt>%token</tt>:
+either </p>
+
+<ul>
+<pre>%left <i>symbols ...</i></pre>
+</ul>
+
+<p>or </p>
+
+<ul>
+<pre>%left &lt;<i>type</i>&gt; <i>symbols ...</i></pre>
+</ul>
+
+<p>And indeed any of these declarations serves the purposes of <tt>%token</tt>.
+But in addition, they specify the associativity and relative precedence
+for all the <i>symbols</i>: </p>
+
+<ul>
+<li>The associativity of an operator <i>op</i> determines how repeated
+uses of the operator nest: whether <tt><i>x</i> <i>op</i> <i>y</i> <i>op</i>
+<i>z</i></tt> is parsed by grouping <i>x</i> with <i>y</i> first or by
+grouping <i>y</i> with <i>z</i> first. <tt>%left</tt> specifies left-associativity
+(grouping <i>x</i> with <i>y</i> first) and <tt>%right</tt> specifies right-associativity
+(grouping <i>y</i> with <i>z</i> first). <tt>%nonassoc</tt> specifies no
+associativity, which means that <tt><i>x</i> <i>op</i> <i>y</i> <i>op</i>
+<i>z</i></tt> is considered a syntax error. </li>
+
+<li>The precedence of an operator determines how it nests with other operators.
+All the tokens declared in a single precedence declaration have equal precedence
+and nest together according to their associativity. When two tokens declared
+in different precedence declarations associate, the one declared later
+has the higher precedence and is grouped first. </li>
+</ul>
+
+<h4>The Collection of Value Types</h4>
+
+<p>The <tt>%union</tt> declaration specifies the entire collection of possible
+data types for semantic values. The keyword <tt>%union</tt> is followed
+by a pair of braces containing the same thing that goes inside a <tt>union</tt>
+in C. For example: </p>
+
+<ul>
+<pre>%union {
+  double val;
+  symrec *tptr;
+}</pre>
+</ul>
+
+<p>This says that the two alternative types are <tt>double</tt> and <tt>symrec
+*</tt>. They are given names <tt>val</tt> and <tt>tptr</tt>; these names
+are used in the <tt>%token</tt> and <tt>%type</tt> declarations to pick
+one of the types for a terminal or nonterminal symbol. Note that, unlike
+making a <tt>union</tt> declaration in C, you do not write a semicolon
+after the closing brace. </p>
+
+<h4>Yacc/Bison Declaration Summary</h4>
+
+<p>Here is a summary of all Yacc/Bison declarations: \begin{description}
+</p>
+
+<dt>%union] Declare the collection of data types that semantic values may
+have. </dt>
+
+<dt>%token] Declare a terminal symbol (token type name) with no precedence
+or associativity specified. </dt>
+
+<dt>%right] Declare a terminal symbol (token type name) that is right-associative.
+</dt>
+
+<dt>%left] Declare a terminal symbol (token type name) that is left-associative.
+</dt>
+
+<dt>%nonassoc] Declare a terminal symbol (token type name) that is nonassociative
+(using it in a way that would be associative is a syntax error). </dt>
+
+<dt>%type $&lt;$<i>non-terminal</i>$&gt;$] Declare the type of semantic
+values for a nonterminal symbol. When you use <tt>%union</tt> to specify
+multiple value types, you must declare the value type of each nonterminal
+symbol for which values are used. This is done with a <tt>%type</tt> declaration.
+Here <i>nonterminal</i> is the name of a nonterminal symbol, and <i>type</i>
+is the name given in the <tt>%union</tt> to the alternative that you want.
+You can give any number of nonterminal symbols in the same <tt>%type</tt>
+declaration, if they have the same value type. Use spaces to separate the
+symbol names. </dt>
+
+<dt>%start $&lt;$<i>non-terminal</i>$&gt;$] Specify the grammar's start
+symbol. Yacc/Bison assumes by default that the start symbol for the grammar
+is the first nonterminal specified in the grammar specification section.
+The programmer may override this restriction with the <tt>%start</tt> declaration.
+\end{description} </dt>
+
+<h3>The Grammar Rules Section</h3>
+
+<p>The <i>grammar rules</i> section contains one or more Yacc/Bison grammar
+rules, and nothing else. </p>
+
+<p>There must always be at least one grammar rule, and the first <tt>%%</tt>
+(which precedes the grammar rules) may never be omitted even if it is the
+first thing in the file. </p>
+
+<p>A Yacc/Bison grammar rule has the following general form: </p>
+
+<ul>
+<pre><i>result</i> : <i>components ...</i>;</pre>
+</ul>
+
+<p>where <i>result</i> is the nonterminal symbol that this rule describes
+and <i>components</i> are various terminal and nonterminal symbols that
+are put together by this rule. For example, </p>
+
+<ul>
+<pre>exp : exp '+' exp ;</pre>
+</ul>
+
+<p>says that two groupings of type <tt>exp</tt>, with a <tt>+</tt> token
+in between, can be combined into a larger grouping of type <tt>exp</tt>.
+</p>
+
+<p>Whitespace in rules is significant only to separate symbols. You can
+add extra whitespace as you wish. </p>
+
+<p>Scattered among the components can be <i>actions</i> that determine
+the semantics of the rule. An action looks like this: </p>
+
+<ul>
+<pre>{<i>C statements</i>}</pre>
+</ul>
+
+<p>Usually there is only one action and it follows the components. </p>
+
+<p>Multiple rules for the same <i>result</i> can be written separately
+or can be joined with the vertical-bar character <tt>|</tt> as follows:
+</p>
+
+<ul>
+<pre><i>result</i> : <i>rule1-components ...
+</i>        | <i>rule2-components ...
+</i>        ...
+        ;</pre>
+</ul>
+
+<p>They are still considered distinct rules even when joined in this way.
+</p>
+
+<p>If <i>components</i> in a rule is empty, it means that <i>result</i>
+can match the empty string. For example, here is how to define a comma-separated
+sequence of zero or more <tt>exp</tt> groupings: </p>
+
+<ul>
+<pre>expseq : /* empty */
+        | expseq1
+        ;
+
+expseq1 : exp
+        | expseq1 ',' exp
+        ;</pre>
+</ul>
+
+<p>It is customary to write a comment <tt>/* empty */</tt> in each rule
+with no components. </p>
+
+<p>A rule is called <i>recursive</i> when its <i>result</i> nonterminal
+appears also on its right hand side. Nearly all Yacc/Bison grammars need
+to use recursion, because that is the only way to define a sequence of
+any number of somethings. Consider this recursive definition of a comma-separated
+sequence of one or more expressions: </p>
+
+<ul>
+<pre>expseq1 : exp
+        | expseq1 ',' exp
+        ;</pre>
+</ul>
+
+<p>Since the recursive use of <tt>expseq1</tt> is the leftmost symbol in
+the right hand side, we call this <i>left recursion</i>. By contrast, here
+the same construct is defined using <i>right recursion</i>: </p>
+
+<ul>
+<pre>expseq1 : exp
+        | exp ',' expseq1
+        ;</pre>
+</ul>
+
+<p>Any kind of sequence can be defined using either left recursion or right
+recursion, but you should always use left recursion, because it can parse
+a sequence of any number of elements with bounded stack space. Right recursion
+uses up space on the Yacc/Bison stack in proportion to the number of elements
+in the sequence, because all the elements must be shifted onto the stack
+before the rule can be applied even once. </p>
+
+<p><i>Indirect</i> or <i>mutual</i> recursion occurs when the result of
+the rule does not appear directly on its right hand side, but does appear
+in rules for other nonterminals which do appear on its right hand side.
+For example: </p>
+
+<ul>
+<pre>expr : primary
+        | primary '+' primary
+        ;
+
+primary : constant
+        | '(' expr ')'
+        ;</pre>
+</ul>
+
+<p>defines two mutually-recursive nonterminals, since each refers to the
+other. </p>
+
+<h3>Semantic Actions</h3>
+
+<p>In order to be useful, a program must do more than parse input; it must
+also produce some output based on the input. In a Yacc/Bison grammar, a
+grammar rule can have an <i>action</i> made up of C statements. Each time
+the parser recognizes a match for that rule, the action is executed. </p>
+
+<p>Most of the time, the purpose of an action is to compute the semantic
+value of the whole construct from the semantic values of its parts. For
+example, suppose we have a rule which says an expression can be the sum
+of two expressions. When the parser recognizes such a sum, each of the
+subexpressions has a semantic value which describes how it was built up.
+The action for this rule should create a similar sort of value for the
+newly recognized larger expression. </p>
+
+<p>For example, here is a rule that says an expression can be the sum of
+two subexpressions: </p>
+
+<ul>
+<pre>expr : expr '+' expr   { $$ = $1 + $3; }
+        ;</pre>
+</ul>
+
+<p>The action says how to produce the semantic value of the sum expression
+from the values of the two subexpressions. </p>
+
+<h3>Defining Language Semantics</h3>
+
+<p>The grammar rules for a language determine only the syntax. The semantics
+are determined by the semantic values associated with various tokens and
+groupings, and by the actions taken when various groupings are recognized.
+</p>
+
+<p>For example, the calculator calculates properly because the value associated
+with each expression is the proper number; it adds properly because the
+action for the grouping {<tt><i>x</i> + <i>y</i></tt>} is to add the numbers
+associated with <i>x</i> and <i>y</i>. </p>
+
+<h4>Data Types of Semantic Values</h4>
+
+<p>In a simple program it may be sufficient to use the same data type for
+the semantic values of all language constructs. Yacc/Bison's default is
+to use type <tt>int</tt> for all semantic values. To specify some other
+type, define <tt>YYSTYPE</tt> as a macro, like this: </p>
+
+<ul>
+<pre>#define YYSTYPE double</pre>
+</ul>
+
+<p>This macro definition must go in the C declarations section of the grammar
+file. </p>
+
+<h4>More Than One Value Type</h4>
+
+<p>In most programs, you will need different data types for different kinds
+of tokens and groupings. For example, a numeric constant may need type
+<tt>int</tt> or <tt>long</tt>, while a string constant needs type <tt>char
+*</tt>, and an identifier might need a pointer to an entry in the symbol
+table. </p>
+
+<p>To use more than one data type for semantic values in one parser, Yacc/Bison
+requires you to do two things: </p>
+
+<ul>
+<li>Specify the entire collection of possible data types, with the <tt>%union</tt>
+Yacc/Bison declaration. </li>
+
+<li>Choose one of those types for each symbol (terminal or nonterminal)
+for which semantic values are used. This is done for tokens with the <tt>%token</tt>
+Yacc/Bison declaration and for groupings with the <tt>%type</tt> Yacc/Bison
+declaration. </li>
+</ul>
+
+<p>An action accompanies a syntactic rule and contains C code to be executed
+each time an instance of that rule is recognized. The task of most actions
+is to compute a semantic value for the grouping built by the rule from
+the semantic values associated with tokens or smaller groupings. </p>
+
+<p>An action consists of C statements surrounded by braces, much like a
+compound statement in C. It can be placed at any position in the rule;
+it is executed at that position. Most rules have just one action at the
+end of the rule, following all the components. Actions in the middle of
+a rule are tricky and used only for special purposes. </p>
+
+<p>The C code in an action can refer to the semantic values of the components
+matched by the rule with the construct <tt>$<i>n</i></tt>, which stands
+for the value of the <i>n</i>th component. The semantic value for the grouping
+being constructed is <tt>$$</tt>. (Yacc/Bison translates both of these
+constructs into array element references when it copies the actions into
+the parser file.) </p>
+
+<p>Here is a typical example: </p>
+
+<ul>
+<pre>exp :  ...
+        | exp '+' exp
+            { $$ = $1 + $3; }</pre>
+</ul>
+
+<p>This rule constructs an <tt>exp</tt> from two smaller <tt>exp</tt> groupings
+connected by a plus-sign token. In the action, <tt>$1</tt> and <tt>$3</tt>
+refer to the semantic values of the two component <tt>exp</tt> groupings,
+which are the first and third symbols on the right hand side of the rule.
+The sum is stored into <tt>$$</tt> so that it becomes the semantic value
+of the addition-expression just recognized by the rule. If there were a
+useful semantic value associated with the <tt>+</tt> token, it could be
+referred to as <tt>$2</tt>. </p>
+
+<p><tt>$<i>n</i></tt> with <i>n</i> zero or negative is allowed for reference
+to tokens and groupings on the stack <i>before</i> those that match the
+current rule. This is a very risky practice, and to use it reliably you
+must be certain of the context in which the rule is applied. Here is a
+case in which you can use this reliably: </p>
+
+<ul>
+<pre>foo : expr bar '+' expr  {  ... }
+        | expr bar '-' expr  {  ... }
+        ;
+
+bar : /* empty */
+        { previous_expr = $0; }
+        ;</pre>
+</ul>
+
+<p>As long as <tt>bar</tt> is used only in the fashion shown here, <tt>\$0</tt>
+always refers to the <tt>expr</tt> which precedes <tt>bar</tt> in the definition
+of <tt>foo</tt>. </p>
+
+<h4>Data Types of Values in Actions</h4>
+
+<p>If you have chosen a single data type for semantic values, the <tt>\$\$</tt>
+and <tt>\$<i>n</i></tt> constructs always have that data type. </p>
+
+<p>If you have used <tt>%union</tt> to specify a variety of data types,
+then you must declare a choice among these types for each terminal or nonterminal
+symbol that can have a semantic value. Then each time you use <tt>$$</tt>
+or <tt>$<i>n</i></tt>, its data type is determined by which symbol it refers
+to in the rule. In this example,efill </p>
+
+<ul>
+<pre>exp :  ...
+        | exp '+' exp
+            { $$ = $1 + $3; }</pre>
+</ul>
+
+<p><tt>$1</tt> and <tt>$3</tt> refer to instances of <tt>exp</tt>, so they
+all have the data type declared for the nonterminal symbol <tt>exp</tt>.
+If <tt>$2</tt> were used, it would have the data type declared for the
+terminal symbol <tt>'+'</tt>, whatever that might be. </p>
+
+<p>Alternatively, you can specify the data type when you refer to the value,
+by inserting <tt>&lt;<i>type</i>&gt;</tt> after the <tt>$</tt> at the beginning
+of the reference. For example, if you have defined types as shown here:
+</p>
+
+<ul>
+<pre>%union {
+  int itype;
+  double dtype;
+}</pre>
+</ul>
+
+<p>then you can write <tt>$&lt;itype&gt;1</tt> to refer to the first subunit
+of the rule as an integer, or <tt>$&lt;dtype&gt;1</tt> to refer to it as
+a double. </p>
+
+<h4>Actions in Mid-Rule</h4>
+
+<p>Occasionally it is useful to put an action in the middle of a rule.
+These actions are written just like usual end-of-rule actions, but they
+are executed before the parser even recognizes the following components.
+</p>
+
+<p>A mid-rule action may refer to the components preceding it using <tt>$<i>n</i></tt>,
+but it may not refer to subsequent components because it is run before
+they are parsed. </p>
+
+<p>The mid-rule action itself counts as one of the components of the rule.
+This makes a difference when there is another action later in the same
+rule (and usually there is another at the end): you have to count the actions
+along with the symbols when working out which number <i>n</i> to use in
+<tt>$<i>n</i></tt>. </p>
+
+<p>The mid-rule action can also have a semantic value. This can be set
+within that action by an assignment to <tt>$$</tt>, and can referred to
+by later actions using <tt>$<i>n</i></tt>. Since there is no symbol to
+name the action, there is no way to declare a data type for the value in
+advance, so you must use the <tt>$&lt; ...&gt;</tt> construct to specify
+a data type each time you refer to this value. </p>
+
+<p>Here is an example from a hypothetical compiler, handling a <tt>let</tt>
+statement that looks like <tt>let (<i>variable</i>) <i>statement</i></tt>
+and serves to create a variable named <i>variable</i> temporarily for the
+duration of <i>statement</i>. To parse this construct, we must put <i>variable</i>
+into the symbol table while <i>statement</i> is parsed, then remove it
+afterward. Here is how it is done: </p>
+
+<ul>
+<pre>stmt : LET '(' var ')'
+                { $&lt;context&gt;$ = push_context ();
+                  declare_variable (\$3); }
+        stmt    { $$ = $6;
+                  pop_context ($&lt;context&gt;5); }</pre>
+</ul>
+
+<p>As soon as <tt>let (<i>variable</i>)</tt> has been recognized, the first
+action is run. It saves a copy of the current semantic context (the list
+of accessible variables) as its semantic value, using alternative <tt>context</tt>
+in the data-type union. Then it calls <tt>declare_variable</tt> to add
+the new variable to that list. Once the first action is finished, the embedded
+statement <tt>stmt</tt> can be parsed. Note that the mid-rule action is
+component number 5, so the <tt>stmt</tt> is component number 6. </p>
+
+<p>After the embedded statement is parsed, its semantic value becomes the
+value of the entire <tt>let</tt>-statement. Then the semantic value from
+the earlier action is used to restore the prior list of variables. This
+removes the temporary <tt>let</tt>-variable from the list so that it won't
+appear to exist while the rest of the program is parsed. </p>
+
+<p>Taking action before a rule is completely recognized often leads to
+conflicts since the parser must commit to a parse in order to execute the
+action. For example, the following two rules, without mid-rule actions,
+can coexist in a working parser because the parser can shift the open-brace
+token and look at what follows before deciding whether there is a declaration
+or not: </p>
+
+<ul>
+<pre>compound : '{' declarations statements '}'
+        | '{' statements '}'
+        ;</pre>
+</ul>
+
+<p>But when we add a mid-rule action as follows, the rules become nonfunctional:
+</p>
+
+<ul>
+<pre>compound : { prepare_for_local_variables (); }
+          '{' declarations statements '}'
+        | '{' statements '}'
+        ;</pre>
+</ul>
+
+<p>Now the parser is forced to decide whether to run the mid-rule action
+when it has read no farther than the open-brace. In other words, it must
+commit to using one rule or the other, without sufficient information to
+do it correctly. (The open-brace token is what is called the <i>look-ahead</i>
+token at this time, since the parser is still deciding what to do about
+it. </p>
+
+<p>You might think that you could correct the problem by putting identical
+actions into the two rules, like this: </p>
+
+<ul>
+<pre>compound : { prepare_for_local_variables (); }
+          '{' declarations statements '}'
+        | { prepare_for_local_variables (); }
+          '{' statements '}'
+        ;</pre>
+</ul>
+
+<p>But this does not help, because Yacc/Bison does not realize that the
+two actions are identical. (Yacc/Bison never tries to understand the C
+code in an action.) </p>
+
+<p>If the grammar is such that a declaration can be distinguished from
+a statement by the first token (which is true in C), then one solution
+which does work is to put the action after the open-brace, like this: </p>
+
+<ul>
+<pre>compound : '{' { prepare_for_local_variables (); }
+          declarations statements '}'
+        | '{' statements '}'
+        ;</pre>
+</ul>
+
+<p>Now the first token of the following declaration or statement, which
+would in any case tell Yacc/Bison which rule to use, can still do so. </p>
+
+<p>Another solution is to bury the action inside a nonterminal symbol which
+serves as a subroutine: </p>
+
+<ul>
+<pre>subroutine : /* empty */
+          { prepare_for_local_variables (); }
+        ;
+
+compound : subroutine
+          '{' declarations statements '}'
+        | subroutine
+          '{' statements '}'
+        ;</pre>
+</ul>
+
+<p>Now Yacc/Bison can execute the action in the rule for <tt>subroutine</tt>
+without deciding which rule for <tt>compound</tt> it will eventually use.
+Note that the action is now at the end of its rule. Any mid-rule action
+can be converted to an end-of-rule action in this way, and this is what
+Yacc/Bison actually does to implement mid-rule actions. </p>
+
+<h3>The Additional C Code Section</h3>
+
+<p>The <i>additional C code</i> section is copied verbatim to the end of
+the parser file, just as the <i>C declarations</i> section is copied to
+the beginning. This is the most convenient place to put anything that you
+want to have in the parser file but which need not come before the definition
+of <tt>yylex</tt>. For example, the definitions of <tt>yylex</tt> and <tt>yyerror</tt>
+often go here. </p>
+
+<p>If the last section is empty, you may omit the <tt>%%</tt> that separates
+it from the grammar rules. </p>
+
+<p>The Yacc/Bison parser itself contains many static variables whose names
+start with <tt>yy</tt> and many macros whose names start with <tt>YY</tt>.
+It is a good idea to avoid using any such names (except those documented
+in this manual) in the additional C code section of the grammar file. </p>
+
+<p>It is not usually acceptable to have a program terminate on a parse
+error. For example, a compiler should recover sufficiently to parse the
+rest of the input file and check it for errors. </p>
+
+<h2>Yacc/Bison Output: the Parser File</h2>
+
+<p>When you run Yacc/Bison, you give it a Yacc/Bison grammar file as input.
+The output is a C source file that parses the language described by the
+grammar. This file is called a <i>Yacc/Bison parser</i>. Keep in mind that
+the Yacc/Bison utility and the Yacc/Bison parser are two distinct programs:
+the Yacc/Bison utility is a program whose output is the Yacc/Bison parser
+that becomes part of your program. </p>
+
+<p>The job of the Yacc/Bison parser is to group tokens into groupings according
+to the grammar rules---for example, to build identifiers and operators
+into expressions. As it does this, it runs the actions for the grammar
+rules it uses. </p>
+
+<p>The tokens come from a function called the <i>lexical analyzer</i> that
+you must supply in some fashion (such as by writing it in C or using Lex/Flex).
+The Yacc/Bison parser calls the lexical analyzer each time it wants a new
+token. It doesn't know what is ``inside'' the tokens (though their semantic
+values may reflect this). Typically the lexical analyzer makes the tokens
+by parsing characters of text, but Yacc/Bison does not depend on this.
+</p>
+
+<p>The Yacc/Bison parser file is C code which defines a function named
+<tt>yyparse</tt> which implements that grammar. This function does not
+make a complete C program: you must supply some additional functions. One
+is the lexical analyzer. Another is an error-reporting function which the
+parser calls to report an error. In addition, a complete C program must
+start with a function called <tt>main</tt>; you have to provide this, and
+arrange for it to call <tt>yyparse</tt> or the parser will never run. </p>
+
+<p>Aside from the token type names and the symbols in the actions you write,
+all variable and function names used in the Yacc/Bison parser file begin
+with <tt>yy</tt> or <tt>YY</tt>. This includes interface functions such
+as the lexical analyzer function <tt>yylex</tt>, the error reporting function
+<tt>yyerror</tt> and the parser function <tt>yyparse</tt> itself. This
+also includes numerous identifiers used for internal purposes. Therefore,
+you should avoid using C identifiers starting with <tt>yy</tt> or <tt>YY</tt>
+in the Yacc/Bison grammar file except for the ones defined in this manual.
+</p>
+
+<h2>Parser C-Language Interface</h2>
+
+<p>The Yacc/Bison parser is actually a C function named <tt>yyparse</tt>.
+Here we describe the interface conventions of <tt>yyparse</tt> and the
+other functions that it needs to use. </p>
+
+<p>Keep in mind that the parser uses many C identifiers starting with <tt>yy</tt>
+and <tt>YY</tt> for internal purposes. If you use such an identifier (aside
+from those in this manual) in an action or in additional C code in the
+grammar file, you are likely to run into trouble. </p>
+
+<h3>The Parser Function <tt>yyparse</tt></h3>
+
+<p>You call the function <tt>yyparse</tt> to cause parsing to occur. This
+function reads tokens, executes actions, and ultimately returns when it
+encounters end-of-input or an unrecoverable syntax error. You can also
+write an action which directs <tt>yyparse</tt> to return immediately without
+reading further. </p>
+
+<p>The value returned by <tt>yyparse</tt> is 0 if parsing was successful
+(return is due to end-of-input). </p>
+
+<p>The value is 1 if parsing failed (return is due to a syntax error).
+</p>
+
+<p>In an action, you can cause immediate return from <tt>yyparse</tt> by
+using these macros: \begin{description} </p>
+
+<li>YYACCEPT Return immediately with value 0 (to report success). </li>
+
+<li>YYABORT Return immediately with value 1 (to report failure). \end{description}
+} </li>
+
+<h3>The Lexical Analyzer Function <tt>yylex</tt></h3>
+
+<p>The <i>lexical analyzer</i> function, <tt>yylex</tt>, recognizes tokens
+from the input stream and returns them to the parser. Yacc/Bison does not
+create this function automatically; you must write it so that <tt>yyparse</tt>
+can call it. The function is sometimes referred to as a lexical scanner.
+</p>
+
+<p>In simple programs, <tt>yylex</tt> is often defined at the end of the
+Yacc/Bison grammar file. If <tt>yylex</tt> is defined in a separate source
+file, you need to arrange for the token-type macro definitions to be available
+there. To do this, use the <tt>-d</tt> option when you run Yacc/Bison,
+so that it will write these macro definitions into a separate header file
+<tt><i>name</i>.tab.h</tt> which you can include in the other source files
+that need it. </p>
+
+<h4>Calling Convention for <tt>yylex</tt></h4>
+
+<p>The value that <tt>yylex</tt> returns must be the numeric code for the
+type of token it has just found, or 0 for end-of-input. </p>
+
+<p>When a token is referred to in the grammar rules by a name, that name
+in the parser file becomes a C macro whose definition is the proper numeric
+code for that token type. So <tt>yylex</tt> can use the name to indicate
+that type. </p>
+
+<p>When a token is referred to in the grammar rules by a character literal,
+the numeric code for that character is also the code for the token type.
+So <tt>yylex</tt> can simply return that character code. The null character
+must not be used this way, because its code is zero and that is what signifies
+end-of-input. </p>
+
+<p>Here is an example showing these things: </p>
+
+<ul>
+<pre>yylex()
+{
+   ...
+  if (c == EOF)     /* Detect end of file. */
+    return 0;
+   ...
+  if (c == '+' || c == '-')
+    return c;      /* Assume token type for `+' is '+'. */
+   ...
+  return INT;      /* Return the type of the token. */
+   ...
+}
+</pre>
+</ul>
+
+<p>This interface has been designed so that the output from the <tt>lex</tt>
+utility can be used without change as the definition of <tt>yylex</tt>.
+</p>
+
+<h4>Semantic Values of Tokens</h4>
+
+<p>In an ordinary (nonreentrant) parser, the semantic value of the token
+must be stored into the global variable <tt>yylval</tt>. When you are using
+just one data type for semantic values, <tt>yylval</tt> has that type.
+Thus, if the type is <tt>int</tt> (the default), you might write this in
+<tt>yylex</tt>: </p>
+
+<ul>
+<pre>...
+yylval = value;  /* Put value onto Yacc/Bison stack. */
+return INT;      /* Return the type of the token. */
+...</pre>
+</ul>
+
+<p>When you are using multiple data types, <tt>yylval</tt>'s type is a
+union made from the <tt>%union</tt> declaration. So when you store a token's
+value, you must use the proper member of the union. If the <tt>%union</tt>
+declaration looks like this: </p>
+
+<ul>
+<pre>%union {
+  int intval;
+  double val;
+  symrec *tptr;
+}</pre>
+</ul>
+
+<p>then the code in <tt>yylex</tt> might look like this: </p>
+
+<ul>
+<pre>...
+yylval.intval = value; /* Put value onto Yacc/Bison stack. */
+return INT;          /* Return the type of the token. */
+...</pre>
+</ul>
+
+<h4>Textual Positions of Tokens</h4>
+
+<p>If you are using the <tt>@<i>n</i></tt>-feature in actions to keep track
+of the textual locations of tokens and groupings, then you must provide
+this information in <tt>yylex</tt>. The function <tt>yyparse</tt> expects
+to find the textual location of a token just parsed in the global variable
+<tt>yylloc</tt>. So <tt>yylex</tt> must store the proper data in that variable.
+The value of <tt>yylloc</tt> is a structure and you need only initialize
+the members that are going to be used by the actions. The four members
+are called <tt>first_line</tt>, <tt>first_column</tt>, <tt>last_line</tt>
+and <tt>last_column</tt>. Note that the use of this feature makes the parser
+noticeably slower. </p>
+
+<p>The data type of <tt>yylloc</tt> has the name <tt>YYLTYPE</tt>. </p>
+
+<h3>The Error Reporting Function <tt>yyerror</tt></h3>
+
+<p>The Yacc/Bison parser detects a <i>parse error</i> or <i>syntax error</i>
+whenever it reads a token which cannot satisfy any syntax rule. A action
+in the grammar can also explicitly proclaim an error, using the macro <tt>YYERROR</tt>.
+</p>
+
+<p>The Yacc/Bison parser expects to report the error by calling an error
+reporting function named <tt>yyerror</tt>, which you must supply. It is
+called by <tt>yyparse</tt> whenever a syntax error is found, and it receives
+one argument. For a parse error, the string is always <tt>"parse error"</tt>.
+</p>
+
+<p>The following definition suffices in simple programs: </p>
+
+<ul>
+<pre>yyerror (s)
+     char *s;
+{
+  fprintf (stderr, "%s\", s);
+}</pre>
+</ul>
+
+<p>After <tt>yyerror</tt> returns to <tt>yyparse</tt>, the latter will
+attempt error recovery if you have written suitable error recovery grammar
+rules. If recovery is impossible, <tt>yyparse</tt> will immediately return
+1. </p>
+
+<h2>Debugging Your Parser</h2>
+
+<h3>Shift/Reduce Conflicts</h3>
+
+<p>Suppose we are parsing a language which has if-then and if-then-else
+statements, with a pair of rules like this: </p>
+
+<ul>
+<pre>if_stmt : IF expr THEN stmt
+| IF expr THEN stmt ELSE stmt
+;
+</pre>
+</ul>
+
+<p>(Here we assume that <tt>IF</tt>, <tt>THEN</tt> and <tt>ELSE</tt> are
+terminal symbols for specific keyword tokens.) </p>
+
+<p>When the <tt>ELSE</tt> token is read and becomes the look-ahead token,
+the contents of the stack (assuming the input is valid) are just right
+for reduction by the first rule. But it is also legitimate to shift the
+<tt>ELSE</tt>, because that would lead to eventual reduction by the second
+rule. </p>
+
+<p>This situation, where either a shift or a reduction would be valid,
+is called a <i>shift/reduce conflict</i>. Yacc/Bison is designed to resolve
+these conflicts by choosing to shift, unless otherwise directed by operator
+precedence declarations. To see the reason for this, let's contrast it
+with the other alternative. </p>
+
+<p>Since the parser prefers to shift the <tt>ELSE</tt>, the result is to
+attach the else-clause to the innermost if-statement, making these two
+inputs equivalent: </p>
+
+<ul>
+<pre>if x then if y then win(); else lose;
+
+if x then do; if y then win(); else lose; end;</pre>
+</ul>
+
+<p>But if the parser chose to reduce when possible rather than shift, the
+result would be to attach the else-clause to the outermost if-statement.
+The conflict exists because the grammar as written is ambiguous: either
+parsing of the simple nested if-statement is legitimate. The established
+convention is that these ambiguities are resolved by attaching the else-clause
+to the innermost if-statement; this is what Yacc/Bison accomplishes by
+choosing to shift rather than reduce. This particular ambiguity is called
+the ``dangling <tt>else</tt>'' ambiguity. </p>
+
+<h3>Operator Precedence</h3>
+
+<p>Another situation where shift/reduce conflicts appear is in arithmetic
+expressions. Here shifting is not always the preferred resolution; the
+Yacc/Bison declarations for operator precedence allow you to specify when
+to shift and when to reduce. </p>
+
+<p>Consider the following ambiguous grammar fragment (ambiguous because
+the input {<tt>1 - 2 * 3</tt>} can be parsed in two different ways): </p>
+
+<ul>
+<pre>expr : expr '-' expr
+        | expr '*' expr
+        | expr '&lt;' expr
+        | '(' expr ')'
+         ...
+;</pre>
+</ul>
+
+<p>Suppose the parser has seen the tokens <tt>1</tt>, <tt>-</tt> and <tt>2</tt>;
+should it reduce them via the rule for the addition operator? It depends
+on the next token. Of course, if the next token is <tt>)</tt>, we must
+reduce; shifting is invalid because no single rule can reduce the token
+sequence {<tt>- 2 )</tt>} or anything starting with that. But if the next
+token is <tt>*</tt> or <tt>&lt;</tt>, we have a choice: either shifting
+or reduction would allow the parse to complete, but with different results.
+</p>
+
+<p>What about input such as {<tt>1 - 2 - 5</tt>}; should this be {<tt>(1
+- 2) - 5</tt>} or should it be {<tt>1 - (2 - 5)</tt>}? For most operators
+we prefer the former, which is called <i>left association</i>. The latter
+alternative, <i>right association</i>, is desirable for assignment operators.
+The choice of left or right association is a matter of whether the parser
+chooses to shift or reduce when the stack contains {<tt>1 - 2</tt>} and
+the look-ahead token is <tt>-</tt>: shifting makes right-associativity.
+</p>
+
+<h4>Specifying Operator Precedence</h4>
+
+<p>Yacc/Bison allows you to specify these choices with the operator precedence
+declarations. Each such declaration contains a list of tokens, which are
+operators whose precedence and associativity is being declared. The <tt>%left</tt>
+declaration makes all those operators left-associative and the <tt>%right</tt>
+declaration makes them right-associative. A third alternative is <tt>%nonassoc</tt>,
+which declares that it is a syntax error to find the same operator twice
+``in a row''. </p>
+
+<p>The relative precedence of different operators is controlled by the
+order in which they are declared. The first <tt>%left</tt> or <tt>%right</tt>
+declaration in the file declares the operators whose precedence is lowest,
+the next such declaration declares the operators whose precedence is a
+little higher, and so on. </p>
+
+<h4>Precedence Examples</h4>
+
+<p>In our example, we would want the following declarations: </p>
+
+<ul>
+<pre>%left '&lt;'
+%left '-'
+%left '*'</pre>
+</ul>
+
+<p>In a more complete example, which supports other operators as well,
+we would declare them in groups of equal precedence. For example, <tt>'+'</tt>
+is declared with <tt>'-'</tt>: </p>
+
+<ul>
+<pre>%left '&lt;' '&gt;' '=' NE LE GE
+%left '+' '-'
+%left '*' '/'</pre>
+</ul>
+
+<p>(Here <tt>NE</tt> and so on stand for the operators for ``not equal''
+and so on. We assume that these tokens are more than one character long
+and therefore are represented by names, not character literals.) </p>
+
+<p>Often the precedence of an operator depends on the context. For example,
+a minus sign typically has a very high precedence as a unary operator,
+and a somewhat lower precedence (lower than multiplication) as a binary
+operator. </p>
+
+<p>The Yacc/Bison precedence declarations, <tt>%left</tt>, <tt>%right</tt>
+and <tt>%nonassoc</tt>, can only be used once for a given token; so a token
+has only one precedence declared in this way. For context-dependent precedence,
+you need to use an additional mechanism: the <tt>%prec</tt> modifier for
+rules. </p>
+
+<p>The <tt>%prec</tt> modifier declares the precedence of a particular
+rule by specifying a terminal symbol whose predecence should be used for
+that rule. It's not necessary for that symbol to appear otherwise in the
+rule. The modifier's syntax is: </p>
+
+<ul>
+<pre>%prec <i>terminal-symbol</i></pre>
+</ul>
+
+<p>and it is written after the components of the rule. Its effect is to
+assign the rule the precedence of <i>terminal-symbol</i>, overriding the
+precedence that would be deduced for it in the ordinary way. The altered
+rule precedence then affects how conflicts involving that rule are resolved.
+</p>
+
+<p>Here is how <tt>%prec</tt> solves the problem of unary minus. First,
+declare a precedence for a fictitious terminal symbol named <tt>UMINUS</tt>.
+There are no tokens of this type, but the symbol serves to stand for its
+precedence: </p>
+
+<ul>
+<pre> ...
+%left '+' '-'
+%left '*'
+%left UMINUS</pre>
+</ul>
+
+<p>Now the precedence of <tt>UMINUS</tt> can be used in specific rules:
+</p>
+
+<ul>
+<pre>exp :  ...
+        | exp '-' exp
+        ...
+        | '-' exp %prec UMINUS</pre>
+</ul>
+
+<h3>Reduce/Reduce Conflicts</h3>
+
+<p>A reduce/reduce conflict occurs if there are two or more rules that
+apply to the same sequence of input. This usually indicates a serious error
+in the grammar. </p>
+
+<p>Yacc/Bison resolves a reduce/reduce conflict by choosing to use the
+rule that appears first in the grammar, but it is very risky to rely on
+this. Every reduce/reduce conflict must be studied and usually eliminated.
+</p>
+
+<h3>Error Recovery</h3>
+
+<p>You can define how to recover from a syntax error by writing rules to
+recognize the special token <tt>error</tt>. This is a terminal symbol that
+is always defined (you need not declare it) and reserved for error handling.
+The Yacc/Bison parser generates an <tt>error</tt> token whenever a syntax
+error happens; if you have provided a rule to recognize this token in the
+current context, the parse can continue. For example: </p>
+
+<ul>
+<pre>stmnts : /* empty string */
+        | stmnts '\'
+        | stmnts exp '\'
+        | stmnts error '\'</pre>
+</ul>
+
+<p>The fourth rule in this example says that an error followed by a newline
+makes a valid addition to any <tt>stmnts</tt>. </p>
+
+<p>What happens if a syntax error occurs in the middle of an <tt>exp</tt>?
+The error recovery rule, interpreted strictly, applies to the precise sequence
+of a <tt>stmnts</tt>, an <tt>error</tt> and a newline. If an error occurs
+in the middle of an <tt>exp</tt>, there will probably be some additional
+tokens and subexpressions on the stack after the last <tt>stmnts</tt>,
+and there will be tokens to read before the next newline. So the rule is
+not applicable in the ordinary way. </p>
+
+<p>But Yacc/Bison can force the situation to fit the rule, by discarding
+part of the semantic context and part of the input. First it discards states
+and objects from the stack until it gets back to a state in which the <tt>error</tt>
+token is acceptable. (This means that the subexpressions already parsed
+are discarded, back to the last complete <tt>stmnts</tt>.) At this point
+the <tt>error</tt> token can be shifted. Then, if the old look-ahead token
+is not acceptable to be shifted next, the parser reads tokens and discards
+them until it finds a token which is acceptable. In this example, Yacc/Bison
+reads and discards input until the next newline so that the fourth rule
+can apply. </p>
+
+<p>The choice of error rules in the grammar is a choice of strategies for
+error recovery. A simple and useful strategy is simply to skip the rest
+of the current input line or current statement if an error is detected:
+</p>
+
+<ul>
+<pre>stmnt : error ';'  /* on error, skip until ';' is read */</pre>
+</ul>
+
+<p>It is also useful to recover to the matching close-delimiter of an opening-delimiter
+that has already been parsed. Otherwise the close-delimiter will probably
+appear to be unmatched, and generate another, spurious error message: </p>
+
+<ul>
+<pre>primary : '(' expr ')'
+        | '(' error ')'
+         ...
+        ;</pre>
+</ul>
+
+<p>Error recovery strategies are necessarily guesses. When they guess wrong,
+one syntax error often leads to another. To prevent an outpouring of error
+messages, the parser will output no error message for another syntax error
+that happens shortly after the first; only after three consecutive input
+tokens have been successfully shifted will error messages resume. </p>
+
+<h3>Further Debugging</h3>
+
+<p>If a Yacc/Bison grammar compiles properly but doesn't do what you want
+when it runs, the <tt>yydebug</tt> parser-trace feature can help you figure
+out why. </p>
+
+<p>To enable compilation of trace facilities, you must define the macro
+<tt>YYDEBUG</tt> when you compile the parser. You could use <tt>-DYYDEBUG=1</tt>
+as a compiler option or you could put <tt>\#define YYDEBUG 1</tt> in the
+C declarations section of the grammar file. Alternatively, use the <tt>-t</tt>
+option when you run Yacc/Bison. We always define <tt>YYDEBUG</tt> so that
+debugging is always possible. </p>
+
+<p>The trace facility uses <tt>stderr</tt>, so you must add <tt>#include
+&lt;stdio.h&gt;</tt> to the C declarations section unless it is already
+there. </p>
+
+<p>Once you have compiled the program with trace facilities, the way to
+request a trace is to store a nonzero value in the variable <tt>yydebug</tt>.
+You can do this by making the C code do it (in <tt>main</tt>). </p>
+
+<p>Each step taken by the parser when <tt>yydebug</tt> is nonzero produces
+a line or two of trace information, written on <tt>stderr</tt>. The trace
+messages tell you these things: </p>
+
+<ul>
+<li>Each time the parser calls <tt>yylex</tt>, what kind of token was read.
+</li>
+
+<li>Each time a token is shifted, the depth and complete contents of the
+state stack. </li>
+
+<li>Each time a rule is reduced, which rule it is, and the complete contents
+of the state stack afterward. </li>
+</ul>
+
+<p>To make sense of this information, it helps to refer to the listing
+file produced by the Yacc/Bison <tt>-v</tt> option. This file shows the
+meaning of each state in terms of positions in various rules, and also
+what each state will do with each possible input token. As you read the
+successive trace messages, you can see that the parser is functioning according
+to its specification in the listing file. Eventually you will arrive at
+the place where something undesirable happens, and you will see which parts
+of the grammar are to blame. </p>
+
+<h2>Stages in Using Yacc/Bison</h2>
+
+<p>The actual language-design process using Yacc/Bison, from grammar specification
+to a working compiler or interpreter, has these parts: </p>
+
+<ol>
+<li>Formally specify the grammar in a form recognized by Yacc/Bison. For
+each grammatical rule in the language, describe the action that is to be
+taken when an instance of that rule is recognized. The action is described
+by a sequence of C statements. </li>
+
+<li>Write a lexical analyzer to process input and pass tokens to the parser.
+The lexical analyzer may be written by hand in C. It could also be produced
+using Lex. </li>
+
+<li>Write a controlling function that calls the Yacc/Bison-produced parser.
+</li>
+
+<li>Write error-reporting routines. </li>
+</ol>
+
+<p>To turn this source code as written into a runnable program, you must
+follow these steps: </p>
+
+<ol>
+<li>Run Yacc/Bison on the grammar to produce the parser. The usual way
+to invoke Yacc/Bison is as follows: </li>
+
+<pre>bison <i>infile</i>
+</pre>
+
+<p>Here <i>infile</i> is the grammar file name, which usually ends in <tt>.y</tt>.
+The parser file's name is made by replacing the <tt>.y</tt> with <tt>.tab.c</tt>.
+Thus, the <tt>bison foo.y</tt> filename yields {foo.tab.c. </p>
+
+<li>Compile the code output by Yacc/Bison, as well as any other source
+files. </li>
+
+<li>Link the object files to produce the finished product. </li>
+</ol>
+
+
+
+</body></html>
