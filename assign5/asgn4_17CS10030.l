@@ -81,10 +81,10 @@ backother  					[ \t\v\n\f]
 
 
 {string_constant} 			{ return STRING_LITERAL; }
-{IDENTIFIER}				{ return IDENTIFIER; }
-{INTEGER_CONSTANT} 			{ return INT_CONSTANT; }
-{FLOATING_CONSTANT} 		{ return FLOAT_CONSTANT; }
-{character_constant} 		{ return CHAR_CONSTANT; }
+{IDENTIFIER}				{ yylval.symp = symlook(yytext); return IDENTIFIER; }
+{INTEGER_CONSTANT} 			{ yylval.intval = atoi(yytext); return INT_CONSTANT; }
+{FLOATING_CONSTANT} 		{ yylval.floatval = atof(yytext); return FLOAT_CONSTANT; }
+{character_constant} 		{ yylval.charval = yytext; return CHAR_CONSTANT; }
 
 
 
