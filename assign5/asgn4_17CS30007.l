@@ -1,11 +1,16 @@
-/*
-Apoorve Singhal
-17CS30007
-*/
+/****************************
+Authors:
+	Apoorve Singhal
+	17CS30007
+	Nikhil Shah
+	17CS10030
+*****************************/
 
 %{
 #include "y.tab.h"
 %}
+
+/*************** Regular Expressions Definitons *******************/
 
 IDENTIFIER_NONDIGIT [a-zA-Z_]
 DIGIT [0-9]
@@ -40,6 +45,9 @@ END_MULTI_LINE_COMMENT ("*/")|(\*+\/)
 SINGLE_LINE_COMMENT \/\/.*$
 
 %%
+
+/******************* Rules and return statements *************/
+
 <MULTI_LINE_COMMENT>{END_MULTI_LINE_COMMENT} BEGIN(INITIAL);
 {START_MULTI_LINE_COMMENT} BEGIN(MULTI_LINE_COMMENT);
 <MULTI_LINE_COMMENT>{EAT_MULTI_LINE_COMMENT}
