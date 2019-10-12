@@ -14,9 +14,14 @@
 
   #define MAX_SYMBOLS 100
   struct symboltable symtab[MAX_SYMBOLS];
+
+  vector<label> labeltabel;
 %}
 
 %union {
+  expression E;
+  boolean_expression BE;
+  statement S;
 	int intval;
   float floatval;
   char charval;
@@ -44,68 +49,6 @@
 %token <symp> IDENTIFIER 
 %token <symp> STRING_LITERAL
 
-%type <symp> primary_expression 
-%type <symp> postfix_expression 
-%type <symp> argument_expression_list 
-%type <symp> unary_expression 
-%type <symp> unary_operator
-%type <symp> cast_expression 
-%type <symp> multiplicative_expression 
-%type <symp> additive_expression 
-%type <symp> shift_expression 
-%type <symp> relational_expression 
-%type <symp> equality_expression 
-%type <symp> AND_expression 
-%type <symp> exclusive_OR_expression 
-%type <symp> inclusive_OR_expression 
-%type <symp> logical_and_expression 
-%type <symp> logical_or_expression 
-%type <symp> conditional_expression 
-%type <symp> assignment_expression 
-%type <symp> assignment_operator 
-%type <symp> expression 
-%type <symp> constant_expression 
-%type <symp> declaration 
-%type <symp> declaration_specifiers 
-%type <symp> init_declarator_list 
-%type <symp> init_declarator 
-%type <symp> storage_class_specifier 
-%type <symp> type_specifier 
-%type <symp> specifier_qualifier_list 
-%type <symp> enum_specifier 
-%type <symp> enumerator_list 
-%type <symp> enumerator 
-%type <symp> type_qualifier 
-%type <symp> function_specifier 
-%type <symp> declarator 
-%type <symp> direct_declarator 
-%type <symp> type_qualifier_list_opt 
-%type <symp> assignment_expression_opt 
-%type <symp> pointer 
-%type <symp> type_qualifier_list 
-%type <symp> parameter_type_list 
-%type <symp> parameter_list 
-%type <symp> parameter_declaration 
-%type <symp> identifier_list
-%type <symp> type_name 
-%type <symp> initializer 
-%type <symp> initializer_list 
-%type <symp> designation 
-%type <symp> designator_list 
-%type <symp> designator 
-%type <symp> statement 
-%type <symp> labeled_statement 
-%type <symp> compound_statement 
-%type <symp> block_item_list 
-%type <symp> block_item 
-%type <symp> expression_statement 
-%type <symp> selection_statement 
-%type <symp> iteration_statement 
-%type <symp> jump_statement 
-%type <symp> translation_unit 
-%type <symp> external_declaration 
-%type <symp> function_definition 
-%type <symp> declaration_list 
 %type <symp> primary_expression 
 %type <symp> postfix_expression 
 %type <symp> argument_expression_list 
@@ -362,26 +305,23 @@ declaration_list : declaration | declaration_list declaration {printf("DECLARATI
 
 %%
 
-void yyerror(char *s) {
+void yyerror(string s) {
 	printf ("ERROR IS : %s\n",s);
 }
 
-struct symboltable *symlook(char *s) {
-  char *p;
+struct symboltable *symlook(string s) {
   struct symboltable *it;
+
   for (it = symtab; it < &symtab[MAX_SYMBOLS]; it++) {
-    
     // is symbol s already here
-    if (it->name && !strcmp(it->name, s)) {
+    if (it->name && it->name !=  s) {
       return it;
     }
-
     // if iterator has reached an empty slot in the symboltable, use that slot
     if (!it->name) {
       it->name = strdup(s);
       return it;
     }
-
   }
   yyerror("Too many symbols!\n");
   exit(1);
@@ -394,12 +334,62 @@ struct symboltable *gentemp() {
   return symlook(str);
 }
 
-void update(struct symboltable *name, char *type, int size, int offset) {
+void update(struct symboltable *name, string type, int size, int offset) {
+  struct symboltable *item = symlook(name);
+  item->type = strdup(type);
+  item->size = size;
+  item->offset = offset;
 }
 
 void print() {
+  struct symboltable *it;
+  for (it = symtab; it < &symtab[MAX_SYMBOLS]; it++) {
+    printf("%s\t%s\t%s\t%d\t%d\t%p\n", it->name, it->type, it->value, it->size, it->offset, it->nested_table);
+  }
+}
+
+void handle_label(string label_id) {
+
+  vector<label>::iterator it;
+
+  for (it = labeltabel.begin(); it != labeltabel.end(); it++) {
+
+    //if it exists in the labeltable
+    if (it->name == label_id) {
+      if (it->addr == NULL){
+        it->addr = nextinstr;
+        backpatch(it->list , addr);
+        it->list = NULL;
+        return;
+      }
+      else{
+        yyerror("Duplicate definition of label %s\n", it->name);
+        return;
+      }
+    }
+  }
+  //if it does not exist in the table
+  it->addr = nextinstr;
+  it->list = NULL;
 
 }
 
+void handle_goto(string label_id){
+  vector<label>::iterator it;
 
+  for (it = labeltabel.begin(); it != labeltabel.end(); it++) {
+      if(it->addr == NULL){
+        it->list = merge(it->list, makelist(nextinstr));
+        return;
+      }else{
+        //#TODO
+        //use it->addr
+        return;
+      }
+   }
 
+  //if it does not exist in the table
+  it->addr = NULL;
+  it->list = makelist(nextinstr);
+
+}
