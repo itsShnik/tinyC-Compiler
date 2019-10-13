@@ -132,19 +132,19 @@
 %%
 
 constant : INT_CONSTANT 
-            {}
+            {$$.loc = gentemp(); emit($$.loc->name, $0);}
           | FLOAT_CONSTANT 
           | ENU_CONSTANT 
           | CHAR_CONSTANT 
           ;
 
 primary_expression : IDENTIFIER 
-                      {$$.loc = $0.loc; emit($$.loc, $0.loc);}
+                      {$$.loc = $0.loc; emit($$.loc->name, $0.loc->name);}
                     | constant 
-                      {$$.loc = gentemp(); emit($$.loc, $0.loc)
+                      {$$.loc = gentemp(); emit($$.loc->name, $0.loc->name)
                     | STRING_LITERAL 
                     | OPENROUND expression CLOSEROUND
-                      {$$.loc = $1.loc; emit($$.loc, $1.loc);}
+                      {$$.loc = $1.loc; emit($$.loc->name, $1.loc->name);}
                     ;
 
 postfix_expression : primary_expression | postfix_expression OPENSQUARE expression CLOSESQUARE | postfix_expression OPENROUND CLOSEROUND | postfix_expression OPENROUND argument_expression_list CLOSEROUND | postfix_expression DOT IDENTIFIER | postfix_expression POINTER IDENTIFIER | postfix_expression INCREMENT | postfix_expression DECREMENT | OPENROUND type_name CLOSEROUND OPENCURLY initializer_list CLOSECURLY |  OPENROUND type_name CLOSEROUND OPENCURLY initializer_list COMMA CLOSECURLY {printf("POSTFIX_EXPRESSION\n");};

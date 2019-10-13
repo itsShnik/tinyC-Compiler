@@ -102,6 +102,18 @@ class quad {
     void emit(opcodeType op1, string s1, string s2, string s3 = 0):
       op(op1), result(s1), arg1(s2), arg2(s3) {}
 
+    // for instructions with int constants
+    void emit(opcodeType op1, string s1, int num):
+      op(op1), result(s1), arg1(0), arg2(0) {
+        arg1 = to_string(num);
+      }
+
+    // for instructions with float constants
+    void emit(opcodeType op1, string s1, float num):
+      op(op1), result(s1), arg1(0), arg2(0) {
+        arg1 = to_string(num);
+      }
+
     // for copy statement
     void emit(string s1, string s2):
       op(COPY), result(s1), arg1(s2), arg2(0) {}
