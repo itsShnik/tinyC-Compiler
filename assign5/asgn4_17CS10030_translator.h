@@ -30,7 +30,7 @@ void backpatch(vector<int> p, int i);
 vector<int> makelist(int i);
 vector<int> merge(vector<int> l1, vector<int> l2);
 
-class expression {
+class expression_class {
   public:
     symboltable *loc;
 };
@@ -49,14 +49,14 @@ class label {
 
 void lookup(string label_id);
 
-class boolean_expression {
+class boolean_expression_class {
   public:
     symboltable *loc;
     vector<int> truelist; 
     vector<int> falselist; 
 };
 
-class statement {
+class statement_class {
   public:
     vector<int> nextlist;
 };
@@ -66,7 +66,7 @@ class declaration {
     string type;
 };
 
-class identifier {
+class identifier_class {
   public:
     symboltable *loc;
 };
