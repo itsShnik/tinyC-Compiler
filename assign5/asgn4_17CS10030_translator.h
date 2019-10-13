@@ -2,7 +2,7 @@
  * Symboltable definition
  */
 
-struct symboltable {
+class symboltable {
   string name;
   string type;
   string value;
@@ -26,6 +26,10 @@ class label {
   string name;
   int addr;
   vector<int> list;
+
+  label() {
+    addr = 0;
+  }
 }
 
 void lookup(string label_id);
@@ -54,6 +58,10 @@ void backpatch(vector<int> p, int i) {
 
 class statement {
   vector<int> nextlist;
+}
+
+class declaration {
+  string type;
 }
 
 

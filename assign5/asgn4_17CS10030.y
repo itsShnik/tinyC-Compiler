@@ -356,17 +356,19 @@ void handle_label(string label_id) {
 
     //if it exists in the labeltable
     if (it->name == label_id) {
-      if (it->addr == NULL){
+      if (it->addr == NULL) {
         it->addr = nextinstr;
         backpatch(it->list , addr);
         it->list = NULL;
         return;
       }
+
       else{
         yyerror("Duplicate definition of label %s\n", it->name);
         return;
       }
     }
+
   }
   //if it does not exist in the table
   it->addr = nextinstr;
@@ -378,18 +380,29 @@ void handle_goto(string label_id){
   vector<label>::iterator it;
 
   for (it = labeltabel.begin(); it != labeltabel.end(); it++) {
-      if(it->addr == NULL){
-        it->list = merge(it->list, makelist(nextinstr));
-        return;
-      }else{
-        //#TODO
-        //use it->addr
-        return;
-      }
+
+      // if the label has been used
+      if (label_id == it->name) {
+
+      // label has been used before but not declared
+      // add this line to the list of usages
+        if (it->addr) {
+          it->list = merge(it->list, makelist(nextinstr));
+          return;
+        }
+
+        // if the label has been declared before
+        else {
+          //#TODO 
+          //emit a goto with it->addr
+          return;
+        }
+    }
+
    }
 
-  //if it does not exist in the table
-  it->addr = NULL;
+  //if goto label does not exist in the table, add it
+  it->addr = 0;
   it->list = makelist(nextinstr);
 
 }
