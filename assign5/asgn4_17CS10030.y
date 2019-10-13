@@ -132,8 +132,9 @@
 %%
 
 constant : INT_CONSTANT 
-            {$$.loc = gentemp(); emit($$.loc->name, $0);}
+            {$$.loc = gentemp($0); emit($$.loc->name, $0);}
           | FLOAT_CONSTANT 
+            {$$.loc = gentemp($0); emit($$.loc->name, $0);}
           | ENU_CONSTANT 
           | CHAR_CONSTANT 
           ;
@@ -358,12 +359,45 @@ symboltable *symlook(string s) {
   exit(1);
 }
 
+// gentemp with no argument
 symboltable *gentemp() {
   static int c = 0; //temp counter for variables
   char str[10]; //temp name
   sprintf(str, "t%02d", c++);
   return symlook(str);
 }
+
+// gentemp with int argument
+symboltable *gentemp(int num) {
+  static int c = 0; //temp counter for variables
+  char str[10]; //temp name
+  sprintf(str, "t%02d", c++);
+  symboltable *p = symlook(str);
+  p->value = to_string(num);
+  return p;
+}
+
+// gentemp with float argument
+symboltable *gentemp(float num) {
+  static int c = 0; //temp counter for variables
+  char str[10]; //temp name
+  sprintf(str, "t%02d", c++);
+  symboltable *p = symlook(str);
+  p->value = to_string(num);
+  return p;
+}
+
+// gentemp with string argument
+symboltable *gentemp(string s) {
+  static int c = 0; //temp counter for variables
+  char str[10]; //temp name
+  sprintf(str, "t%02d", c++);
+  symboltable *p = symlook(str);
+  p->value = s;
+  return p;
+}
+
+
 
 void update(symboltable *name, string type, int size, int offset) {
   symboltable *item = symlook(name);
