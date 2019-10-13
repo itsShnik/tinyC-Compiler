@@ -18,10 +18,14 @@
 	
 	/*--- declaration of symbol table ---*/
 	#define MAX_SYMBOLS 100
-	struct symboltable symtab[MAX_SYMBOLS];
+	symboltable symtab[MAX_SYMBOLS];
 	
 	/*--- declaration of labeltable ---*/
-	vector<label> labeltabel;
+	vector<label> labeltable;
+
+  /*--- declaration of quadarray ---*/
+  quad *qArray[MAX_SYMBOLS];
+  int quadPtr = 0;
 %}
 
 /*--------------- Declaration of Union -------------*/
@@ -32,7 +36,8 @@
 	int intval;
 	float floatval;
 	char charval;
-	struct symboltable *symp;
+	symboltable *symp;
+  identifier ID;
 }
 
 // Keywords
@@ -53,30 +58,31 @@
 %token <floatval> FLOAT_CONSTANT 
 %token <symp> ENU_CONSTANT 
 %token <symp> CHAR_CONSTANT 
-%token <symp> IDENTIFIER 
+%token <ID> IDENTIFIER 
 %token <symp> STRING_LITERAL
 
-%type <symp> primary_expression 
-%type <symp> postfix_expression 
+%type <> constant;
+%type <E> primary_expression 
+%type <E> postfix_expression 
 %type <symp> argument_expression_list 
-%type <symp> unary_expression 
+%type <E> unary_expression 
 %type <symp> unary_operator
-%type <symp> cast_expression 
-%type <symp> multiplicative_expression 
-%type <symp> additive_expression 
-%type <symp> shift_expression 
-%type <symp> relational_expression 
-%type <symp> equality_expression 
-%type <symp> AND_expression 
-%type <symp> exclusive_OR_expression 
-%type <symp> inclusive_OR_expression 
-%type <symp> logical_and_expression 
-%type <symp> logical_or_expression 
-%type <symp> conditional_expression 
-%type <symp> assignment_expression 
-%type <symp> assignment_operator 
-%type <symp> expression 
-%type <symp> constant_expression 
+%type <E> cast_expression 
+%type <E> multiplicative_expression 
+%type <E> additive_expression 
+%type <E> shift_expression 
+%type <E> relational_expression 
+%type <E> equality_expression 
+%type <E> AND_expression 
+%type <E> exclusive_OR_expression 
+%type <E> inclusive_OR_expression 
+%type <E> logical_and_expression 
+%type <E> logical_or_expression 
+%type <E> conditional_expression 
+%type <E> assignment_expression 
+%type <E> assignment_operator 
+%type <E> expression 
+%type <E> constant_expression 
 %type <symp> declaration 
 %type <symp> declaration_specifiers 
 %type <symp> init_declarator_list 
@@ -125,9 +131,21 @@
 
 %%
 
-constant : INT_CONSTANT | FLOAT_CONSTANT | ENU_CONSTANT | CHAR_CONSTANT ;
+constant : INT_CONSTANT 
+            {}
+          | FLOAT_CONSTANT 
+          | ENU_CONSTANT 
+          | CHAR_CONSTANT 
+          ;
 
-primary_expression : IDENTIFIER | constant | STRING_LITERAL | OPENROUND expression CLOSEROUND { printf("PRIMARY_EXPRESSION\n");};
+primary_expression : IDENTIFIER 
+                      {$$.loc = $0.loc; emit($$.loc, $0.loc);}
+                    | constant 
+                      {$$.loc = gentemp(); emit($$.loc, $0.loc)
+                    | STRING_LITERAL 
+                    | OPENROUND expression CLOSEROUND
+                      {$$.loc = $1.loc; emit($$.loc, $1.loc);}
+                    ;
 
 postfix_expression : primary_expression | postfix_expression OPENSQUARE expression CLOSESQUARE | postfix_expression OPENROUND CLOSEROUND | postfix_expression OPENROUND argument_expression_list CLOSEROUND | postfix_expression DOT IDENTIFIER | postfix_expression POINTER IDENTIFIER | postfix_expression INCREMENT | postfix_expression DECREMENT | OPENROUND type_name CLOSEROUND OPENCURLY initializer_list CLOSECURLY |  OPENROUND type_name CLOSEROUND OPENCURLY initializer_list COMMA CLOSECURLY {printf("POSTFIX_EXPRESSION\n");};
 
@@ -322,8 +340,8 @@ void yyerror(string s) {
 }
 
 /*------------ Functions related to symbol table ---------*/
-struct symboltable *symlook(string s) {
-  struct symboltable *it;
+symboltable *symlook(string s) {
+  symboltable *it;
 
   for (it = symtab; it < &symtab[MAX_SYMBOLS]; it++) {
     // is symbol s already here
@@ -340,22 +358,22 @@ struct symboltable *symlook(string s) {
   exit(1);
 }
 
-struct symboltable *gentemp() {
+symboltable *gentemp() {
   static int c = 0; //temp counter for variables
   char str[10]; //temp name
   sprintf(str, "t%02d", c++);
   return symlook(str);
 }
 
-void update(struct symboltable *name, string type, int size, int offset) {
-  struct symboltable *item = symlook(name);
+void update(symboltable *name, string type, int size, int offset) {
+  symboltable *item = symlook(name);
   item->type = strdup(type);
   item->size = size;
   item->offset = offset;
 }
 
 void print() {
-  struct symboltable *it;
+  symboltable *it;
   for (it = symtab; it < &symtab[MAX_SYMBOLS]; it++) {
     printf("%s\t%s\t%s\t%d\t%d\t%p\n", it->name, it->type, it->value, it->size, it->offset, it->nested_table);
   }
@@ -366,7 +384,7 @@ void handle_label(string label_id) {
 
   vector<label>::iterator it;
 
-  for (it = labeltabel.begin(); it != labeltabel.end(); it++) {
+  for (it = labeltable.begin(); it != labeltable.end(); it++) {
 
     //if it exists in the labeltable
     if (it->name == label_id) {
@@ -393,7 +411,7 @@ void handle_label(string label_id) {
 void handle_goto(string label_id){
   vector<label>::iterator it;
 
-  for (it = labeltabel.begin(); it != labeltabel.end(); it++) {
+  for (it = labeltable.begin(); it != labeltable.end(); it++) {
 
       // if the label has been used
       if (label_id == it->name) {
@@ -420,3 +438,4 @@ void handle_goto(string label_id){
   it->list = makelist(nextinstr);
 
 }
+
