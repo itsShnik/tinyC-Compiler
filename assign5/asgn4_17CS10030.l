@@ -1,12 +1,11 @@
-/**************************
- * Name:- Nikhil Shah     *
- * Roll No.:- 17CS10030   *
- * Assignment 4 : Parser  *
- **************************/
+/*---------------------------------------------------
+| Nikhil Shah (17CS10030)
+| Apoorve Singhal (17CS30007)
+| File: flex specifications for compiler
+| Written on: Sep. 28, 2019
+---------------------------------------------------*/
 
-/************** Flex Specifications *****************/
-
-/* Slightly modified this file from the last assignment */
+/*----------------- Flex Specifications ----------------*/
 
 %{
 
@@ -17,7 +16,7 @@ extern void yyerror(const char *);
 
 %}
 
-/************** Regular Expression Definitions *******************/
+/*---------- Regular Expression Definitions ---------------*/
 
 
 ALPHABET 			 		[a-zA-Z_]
@@ -141,7 +140,7 @@ backother  					[ \t\v\n\f]
 
 %%
 
-/*********** Check for commenting format ************/
+/*------ Check for multiple line comment -------------*/
 
 void comment(void) {
 	char c, prev = 0;
@@ -151,6 +150,6 @@ void comment(void) {
 			return;
 		prev = c;
 	}
-	/** else there is an error **/
+	/* else there is an error */
 	error("ERROR: Improper Comments");
 }

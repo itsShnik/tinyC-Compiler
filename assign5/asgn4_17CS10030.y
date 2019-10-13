@@ -1,31 +1,38 @@
-/**************************
- * Name:- Nikhil Shah     *
- * Roll No.:- 17CS10030   *
- * Assignment 4 : Parser  *
- **************************/
+/*---------------------------------------------------
+| Nikhil Shah (17CS10030)
+| Apoorve Singhal (17CS30007)
+| File: Bison specifications for compiler
+| Written on: Sep. 28, 2019
+---------------------------------------------------*/
 
-/**** Bison Specifications ****/
+
+/*--------- Bison Specifications: C Declarations -------*/
 
 %{ 
-	#include <string.h>
-	#include <stdio.h>
+	#include <iostream>
+	#include <string>
+	#include <vector>
+	
 	extern int yylex();
 	void yyerror(char *s);
-
-  #define MAX_SYMBOLS 100
-  struct symboltable symtab[MAX_SYMBOLS];
-
-  vector<label> labeltabel;
+	
+	/*--- declaration of symbol table ---*/
+	#define MAX_SYMBOLS 100
+	struct symboltable symtab[MAX_SYMBOLS];
+	
+	/*--- declaration of labeltable ---*/
+	vector<label> labeltabel;
 %}
 
+/*--------------- Declaration of Union -------------*/
 %union {
-  expression E;
-  boolean_expression BE;
-  statement S;
+	expression E;
+	boolean_expression BE;
+	statement S;
 	int intval;
-  float floatval;
-  char charval;
-  struct symboltable *symp;
+	float floatval;
+	char charval;
+	struct symboltable *symp;
 }
 
 // Keywords
@@ -113,6 +120,8 @@
 %type <symp> declaration_list 
 
 %start <symp>  translation_unit
+
+/*------------------------ Bison Specifications: Grammar Rules ---------------------------*/
 
 %%
 
@@ -305,10 +314,14 @@ declaration_list : declaration | declaration_list declaration {printf("DECLARATI
 
 %%
 
+/*--------------- Additional C code ----------------*/
+
+/*--------------- Func for error ------------------*/
 void yyerror(string s) {
 	printf ("ERROR IS : %s\n",s);
 }
 
+/*------------ Functions related to symbol table ---------*/
 struct symboltable *symlook(string s) {
   struct symboltable *it;
 
@@ -348,6 +361,7 @@ void print() {
   }
 }
 
+/*--------------- Functions related to handling unconditional jump ----------------*/
 void handle_label(string label_id) {
 
   vector<label>::iterator it;

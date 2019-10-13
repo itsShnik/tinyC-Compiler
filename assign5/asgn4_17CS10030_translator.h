@@ -1,6 +1,13 @@
-/* 
- * Symboltable definition
- */
+/*---------------------------------------------------
+| Nikhil Shah (17CS10030)
+| Apoorve Singhal (17CS30007)
+| File: Header files and some function declarations 
+| Written on: Sep. 28, 2019
+---------------------------------------------------*/
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
 
 class symboltable {
   string name;
@@ -9,7 +16,7 @@ class symboltable {
   int size;
   int offset;
   void *nested_table;
-}
+};
 
 struct symboltable *symlook(string s);
 struct symboltable *gentemp();
@@ -20,7 +27,7 @@ void emit(string result, string arg1, string arg2, string op);
 class expression {
   struct symboltable *loc;
   string value;
-}
+};
 
 class label {
   string name;
@@ -30,7 +37,7 @@ class label {
   label() {
     addr = 0;
   }
-}
+};
 
 void lookup(string label_id);
 
@@ -38,7 +45,7 @@ class boolean_expression {
   struct symboltable *loc;
   vector<int> truelist; 
   vector<int> falselist; 
-}
+};
 
 vector<int> makelist(int i) {
   vector<int> list;  
@@ -58,11 +65,11 @@ void backpatch(vector<int> p, int i) {
 
 class statement {
   vector<int> nextlist;
-}
+};
 
 class declaration {
   string type;
-}
+};
 
 
 
