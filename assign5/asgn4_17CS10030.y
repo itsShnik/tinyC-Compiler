@@ -1,7 +1,7 @@
 /*---------------------------------------------------
 | Nikhil Shah (17CS10030)
 | Apoorve Singhal (17CS30007)
-| File: flex specifications for compiler
+| File: Bison specifications for compiler
 | Written on: Sep. 28, 2019
 ---------------------------------------------------*/
 
@@ -9,8 +9,9 @@
 /*--------- Bison Specifications: C Declarations -------*/
 
 %{ 
-	#include <string.h>
-	#include <stdio.h>
+	#include <iostream>
+	#include <string>
+	#include <vector>
 	
 	extern int yylex();
 	void yyerror(char *s);
