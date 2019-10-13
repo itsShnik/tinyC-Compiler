@@ -12,7 +12,8 @@
 	#include <iostream>
 	#include <string>
 	#include <vector>
-	
+	#include "asgn4_17CS10030_translator.h"
+
 	extern int yylex();
 	void yyerror(char *s);
 	
@@ -23,9 +24,10 @@
 	/*--- declaration of labeltable ---*/
 	vector<label> labeltable;
 
-  /*--- declaration of quadarray ---*/
-  quad *qArray[MAX_SYMBOLS];
-  int quadPtr = 0;
+	/*--- declaration of quadarray ---*/
+	quad *qArray[MAX_SYMBOLS];
+	int quadPtr = 0;
+
 %}
 
 /*--------------- Declaration of Union -------------*/
@@ -36,6 +38,7 @@
 	int intval;
 	float floatval;
 	char charval;
+	string stringval;
 	symboltable *symp;
   identifier ID;
 }
@@ -49,7 +52,7 @@
 // Punctuators and operators
 %token MODASSIGN RIGHTSHIFTASSIGN SUBASSIGN MULTIPLYASSIGN INCREMENT
 %token DIVIDEASSIGN ADDASSIGN ANDASSIGN XORASSIGN  RIGHTSHIFT LEFTSHIFT NOTEQUAL EQUALEQUAL 
-%token DECREMENT POINTER ORASSIGN AND LESSTHANEQUAL GREATERTHANEQUAL OR LEFTSHIFTASSIGN ELLIPSIS 
+%token DECREMENT POINTER ORASSIGN LESSTHANEQUAL GREATERTHANEQUAL OR LEFTSHIFTASSIGN ELLIPSIS 
 %token PLUS AND MULTIPLY MINUS NOT DIVIDE PERCENTAGE GREATERTHAN LESSTHAN EQUAL OPENSQUARE CLOSESQUARE
 %token OPENROUND CLOSEROUND OPENCURLY CLOSECURLY DOT EXCLAMATION COMMA HASH XOR QUESTIONMARK COLON SEMICOLON
 
@@ -61,8 +64,10 @@
 %token <ID> IDENTIFIER 
 %token <symp> STRING_LITERAL
 
-%type <> constant;
+%type <E> constant;
 %type <E> primary_expression 
+%type <E> expression 
+/*
 %type <E> postfix_expression 
 %type <symp> argument_expression_list 
 %type <E> unary_expression 
@@ -81,7 +86,6 @@
 %type <E> conditional_expression 
 %type <E> assignment_expression 
 %type <E> assignment_operator 
-%type <E> expression 
 %type <E> constant_expression 
 %type <symp> declaration 
 %type <symp> declaration_specifiers 
@@ -124,28 +128,32 @@
 %type <symp> external_declaration 
 %type <symp> function_definition 
 %type <symp> declaration_list 
+*/
 
-%start <symp>  translation_unit
+%start translation_unit
 
 /*------------------------ Bison Specifications: Grammar Rules ---------------------------*/
 
 %%
 
 constant : INT_CONSTANT 
-            {$$.loc = gentemp($0); emit($$.loc->name, $0);}
+            {$$->loc = gentemp(); emit($$->loc->name, $1);}
           | FLOAT_CONSTANT 
-            {$$.loc = gentemp($0); emit($$.loc->name, $0);}
+            {$$->loc = gentemp(); emit($$->loc->name, $1);}
           | ENU_CONSTANT 
+			{$$->loc = gentemp(); emit($$->loc->name, $1);}
           | CHAR_CONSTANT 
+			{$$->loc = gentemp(); emit($$->loc->name, $1);}
           ;
 
 primary_expression : IDENTIFIER 
-                      {$$.loc = $0.loc; emit($$.loc->name, $0.loc->name);}
+                      //{$$->loc = $1->loc; emit($$->loc->name, $1->loc->name);}
                     | constant 
-                      {$$.loc = gentemp(); emit($$.loc->name, $0.loc->name)
+                      //{$$->loc = gentemp(); emit($$->loc->name, $1->loc->name);}
                     | STRING_LITERAL 
+						//{$$->loc = gentemp(); emit($$->loc->name, $1)};
                     | OPENROUND expression CLOSEROUND
-                      {$$.loc = $1.loc; emit($$.loc->name, $1.loc->name);}
+                      //{$$->loc = $2->loc; emit($$->loc->name, $2->loc->name);}
                     ;
 
 postfix_expression : primary_expression | postfix_expression OPENSQUARE expression CLOSESQUARE | postfix_expression OPENROUND CLOSEROUND | postfix_expression OPENROUND argument_expression_list CLOSEROUND | postfix_expression DOT IDENTIFIER | postfix_expression POINTER IDENTIFIER | postfix_expression INCREMENT | postfix_expression DECREMENT | OPENROUND type_name CLOSEROUND OPENCURLY initializer_list CLOSECURLY |  OPENROUND type_name CLOSEROUND OPENCURLY initializer_list COMMA CLOSECURLY {printf("POSTFIX_EXPRESSION\n");};
@@ -367,38 +375,6 @@ symboltable *gentemp() {
   return symlook(str);
 }
 
-// gentemp with int argument
-symboltable *gentemp(int num) {
-  static int c = 0; //temp counter for variables
-  char str[10]; //temp name
-  sprintf(str, "t%02d", c++);
-  symboltable *p = symlook(str);
-  p->value = to_string(num);
-  return p;
-}
-
-// gentemp with float argument
-symboltable *gentemp(float num) {
-  static int c = 0; //temp counter for variables
-  char str[10]; //temp name
-  sprintf(str, "t%02d", c++);
-  symboltable *p = symlook(str);
-  p->value = to_string(num);
-  return p;
-}
-
-// gentemp with string argument
-symboltable *gentemp(string s) {
-  static int c = 0; //temp counter for variables
-  char str[10]; //temp name
-  sprintf(str, "t%02d", c++);
-  symboltable *p = symlook(str);
-  p->value = s;
-  return p;
-}
-
-
-
 void update(symboltable *name, string type, int size, int offset) {
   symboltable *item = symlook(name);
   item->type = strdup(type);
@@ -471,5 +447,72 @@ void handle_goto(string label_id){
   it->addr = 0;
   it->list = makelist(nextinstr);
 
+}
+
+vector<int> makelist(int i) {
+  vector<int> list;  
+  list.push_back(i);
+  return list;
+}
+
+vector<int> merge(vector<int> l1, vector<int> l2) {
+  vector<int> l3 = l1;
+  l3.insert(l3.end(), l2.begin(), l2.end());
+  return l3;
+}
+
+void backpatch(vector<int> p, int i) {
+  // for each quad in p, the goto address should be i
+  vector<int>::iterator it;
+
+  for (it = p.begin(); it != p.end(); it++) {
+    qArray[*it].result = to_string(i);
+  }
+}
+
+// for binary and unary operators
+void quad::emit(opcodeType op1, string s1, string s2, string s3 = 0):
+  op(op1), result(s1), arg1(s2), arg2(s3) {}
+
+// for instructions with int constants
+void quad::emit(opcodeType op1, string s1, int num):
+  op(op1), result(s1), arg1(0), arg2(0) {
+	arg1 = to_string(num);
+  }
+
+// for instructions with float constants
+void quad::emit(opcodeType op1, string s1, float num):
+  op(op1), result(s1), arg1(0), arg2(0) {
+	arg1 = to_string(num);
+  }
+
+// for copy statement
+void quad::emit(string s1, string s2):
+  op(COPY), result(s1), arg1(s2), arg2(0) {}
+
+// for goto statement
+void quad::emit(opcodeType op1, string s1):
+  op(op1), result(s1) {}
+
+void quad::print() {
+  if ((op <= DIV) && (op >= PLUS)) {
+	printf("%s = %s ", result, arg1);
+	switch(op) {
+	  case PLUS: printf("+"); break;
+	  case MINUS: printf("-"); break;
+	  case MULT: printf("*"); break;
+	  case DIV: printf("/"); break;
+	}
+	printf(" %s\n", arg2);
+  }
+  else if (op == UNARYMINUS) {
+	  printf("%s = - %s\n", result, arg1);
+  }
+  else if (op == COPY) {
+	printf("%s = %s\n", result, arg1);
+  }
+  else if (op == UNCONDITIONAL_JUMP) {
+	printf("goto %s\n", result);
+  }
 }
 

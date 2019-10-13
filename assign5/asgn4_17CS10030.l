@@ -79,7 +79,7 @@ backother  					[ \t\v\n\f]
 "union"         { return UNION; }
 
 
-{string_constant} 			{ return STRING_LITERAL; }
+{string_constant} 			{ yylval.stringval = yytext; return STRING_LITERAL; }
 {IDENTIFIER}				{ yylval.symp = symlook(yytext); return IDENTIFIER; }
 {INTEGER_CONSTANT} 			{ yylval.intval = atoi(yytext); return INT_CONSTANT; }
 {FLOATING_CONSTANT} 		{ yylval.floatval = atof(yytext); return FLOAT_CONSTANT; }
