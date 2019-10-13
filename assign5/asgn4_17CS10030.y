@@ -32,15 +32,15 @@
 
 /*--------------- Declaration of Union -------------*/
 %union {
-	expression E;
-	boolean_expression BE;
-	statement S;
+	expression *E;
+	boolean_expression *BE;
+	statement *S;
 	int intval;
 	float floatval;
-	char charval;
-	string stringval;
+	char *charval;
+	char *stringval;
 	symboltable *symp;
-  identifier ID;
+  identifier *ID;
 }
 
 // Keywords
@@ -60,13 +60,14 @@
 %token <intval> INT_CONSTANT 
 %token <floatval> FLOAT_CONSTANT 
 %token <symp> ENU_CONSTANT 
-%token <symp> CHAR_CONSTANT 
+%token <charval> CHAR_CONSTANT 
 %token <ID> IDENTIFIER 
-%token <symp> STRING_LITERAL
+%token <stringval> STRING_LITERAL
 
 %type <E> constant;
 %type <E> primary_expression 
 %type <E> expression 
+%type <E> assignment_expression 
 /*
 %type <E> postfix_expression 
 %type <symp> argument_expression_list 
@@ -84,7 +85,6 @@
 %type <E> logical_and_expression 
 %type <E> logical_or_expression 
 %type <E> conditional_expression 
-%type <E> assignment_expression 
 %type <E> assignment_operator 
 %type <E> constant_expression 
 %type <symp> declaration 
@@ -137,23 +137,23 @@
 %%
 
 constant : INT_CONSTANT 
-            {$$->loc = gentemp(); emit($$->loc->name, $1);}
+            {$$->loc = gentemp(); qArray[quadPtr++] = new quad(copy_ins, $$->loc->name, $1);}
           | FLOAT_CONSTANT 
-            {$$->loc = gentemp(); emit($$->loc->name, $1);}
+            {$$->loc = gentemp(); qArray[quadPtr++] = new quad(copy_ins, $$->loc->name, $1);}
           | ENU_CONSTANT 
-			{$$->loc = gentemp(); emit($$->loc->name, $1);}
+            {$$->loc = gentemp(); qArray[quadPtr++] = new quad(copy_ins, $$->loc->name, $1->name);}
           | CHAR_CONSTANT 
-			{$$->loc = gentemp(); emit($$->loc->name, $1);}
+            {$$->loc = gentemp(); qArray[quadPtr++] = new quad(copy_ins, $$->loc->name, $1);}
           ;
 
 primary_expression : IDENTIFIER 
-                      //{$$->loc = $1->loc; emit($$->loc->name, $1->loc->name);}
+                      {$$->loc = $1->loc; qArray[quadPtr++] = new quad($$->loc->name, $1->loc->name);}
                     | constant 
-                      //{$$->loc = gentemp(); emit($$->loc->name, $1->loc->name);}
+                      {$$->loc = gentemp(); qArray[quadPtr++] = new quad($$->loc->name, $1->loc->name);}
                     | STRING_LITERAL 
-						//{$$->loc = gentemp(); emit($$->loc->name, $1)};
+                      {$$->loc = gentemp(); qArray[quadPtr++] = new quad($$->loc->name, $1);}
                     | OPENROUND expression CLOSEROUND
-                      //{$$->loc = $2->loc; emit($$->loc->name, $2->loc->name);}
+                      {$$->loc = $2->loc; qArray[quadPtr++] = new quad($$->loc->name, $2->loc->name);}
                     ;
 
 postfix_expression : primary_expression | postfix_expression OPENSQUARE expression CLOSESQUARE | postfix_expression OPENROUND CLOSEROUND | postfix_expression OPENROUND argument_expression_list CLOSEROUND | postfix_expression DOT IDENTIFIER | postfix_expression POINTER IDENTIFIER | postfix_expression INCREMENT | postfix_expression DECREMENT | OPENROUND type_name CLOSEROUND OPENCURLY initializer_list CLOSECURLY |  OPENROUND type_name CLOSEROUND OPENCURLY initializer_list COMMA CLOSECURLY {printf("POSTFIX_EXPRESSION\n");};
@@ -259,10 +259,14 @@ declarator : pointer direct_declarator | direct_declarator {printf("DECLARATOR\n
 direct_declarator : IDENTIFIER | OPENROUND declarator CLOSEROUND | direct_declarator OPENSQUARE  type_qualifier_list_opt assignment_expression_opt CLOSESQUARE | direct_declarator OPENSQUARE STATIC type_qualifier_list_opt assignment_expression CLOSESQUARE | direct_declarator OPENSQUARE type_qualifier_list_opt MULTIPLY CLOSESQUARE | direct_declarator OPENROUND parameter_type_list CLOSEROUND | direct_declarator OPENROUND identifier_list CLOSEROUND | direct_declarator OPENROUND CLOSEROUND {printf("DIRECT_DECLARATOR\n");};
 
 
-type_qualifier_list_opt : %empty | type_qualifier_list {printf("TYPE QUALIFIER LIST OPT\n");};
+type_qualifier_list_opt :type_qualifier_list
+                        | 
+                       ; 
 
 
-assignment_expression_opt : %empty | assignment_expression {printf("ASSIGNMENT EXPRESSION OPT\n");};
+assignment_expression_opt : assignment_expression
+                          |
+                          ;
 
 
 pointer : MULTIPLY | MULTIPLY type_qualifier_list | MULTIPLY pointer | MULTIPLY type_qualifier_list pointer {printf("POINTER\n");};
@@ -344,8 +348,8 @@ declaration_list : declaration | declaration_list declaration {printf("DECLARATI
 /*--------------- Additional C code ----------------*/
 
 /*--------------- Func for error ------------------*/
-void yyerror(string s) {
-	printf ("ERROR IS : %s\n",s);
+void yyerror(char *s) {
+  cout << "Error is: " << s << endl;
 }
 
 /*------------ Functions related to symbol table ---------*/
@@ -354,12 +358,12 @@ symboltable *symlook(string s) {
 
   for (it = symtab; it < &symtab[MAX_SYMBOLS]; it++) {
     // is symbol s already here
-    if (it->name && it->name !=  s) {
+    if (!((it->name).empty())&& it->name != s) {
       return it;
     }
     // if iterator has reached an empty slot in the symboltable, use that slot
-    if (!it->name) {
-      it->name = strdup(s);
+    if (!((it->name).empty())) {
+      it->name = s;
       return it;
     }
   }
@@ -375,9 +379,9 @@ symboltable *gentemp() {
   return symlook(str);
 }
 
-void update(symboltable *name, string type, int size, int offset) {
-  symboltable *item = symlook(name);
-  item->type = strdup(type);
+void update(symboltable *st, string type, int size, int offset) {
+  symboltable *item = symlook(st->name);
+  item->type = type;
   item->size = size;
   item->offset = offset;
 }
@@ -385,7 +389,7 @@ void update(symboltable *name, string type, int size, int offset) {
 void print() {
   symboltable *it;
   for (it = symtab; it < &symtab[MAX_SYMBOLS]; it++) {
-    printf("%s\t%s\t%s\t%d\t%d\t%p\n", it->name, it->type, it->value, it->size, it->offset, it->nested_table);
+    cout << it->name << " " << it->type << " " << it->size << " " << it->offset << " " << it->nested_table << endl;
   }
 }
 
@@ -399,22 +403,22 @@ void handle_label(string label_id) {
     //if it exists in the labeltable
     if (it->name == label_id) {
       if (it->addr == NULL) {
-        it->addr = nextinstr;
-        backpatch(it->list , addr);
-        it->list = NULL;
+        it->addr = quadPtr;
+        backpatch(it->list , it->addr);
+        (it->list).clear();
         return;
       }
 
       else{
-        yyerror("Duplicate definition of label %s\n", it->name);
+        yyerror("Duplicate definition of label\n");
         return;
       }
     }
 
   }
   //if it does not exist in the table
-  it->addr = nextinstr;
-  it->list = NULL;
+  it->addr = quadPtr;
+  (it->list).clear();
 
 }
 
@@ -429,7 +433,7 @@ void handle_goto(string label_id){
       // label has been used before but not declared
       // add this line to the list of usages
         if (it->addr) {
-          it->list = merge(it->list, makelist(nextinstr));
+          it->list = merge(it->list, makelist(quadPtr));
           return;
         }
 
@@ -445,7 +449,7 @@ void handle_goto(string label_id){
 
   //if goto label does not exist in the table, add it
   it->addr = 0;
-  it->list = makelist(nextinstr);
+  it->list = makelist(quadPtr);
 
 }
 
@@ -466,53 +470,61 @@ void backpatch(vector<int> p, int i) {
   vector<int>::iterator it;
 
   for (it = p.begin(); it != p.end(); it++) {
-    qArray[*it].result = to_string(i);
+    (*qArray[*it]).result = to_string(i);
   }
 }
 
 // for binary and unary operators
-void quad::emit(opcodeType op1, string s1, string s2, string s3 = 0):
+quad::quad(opcodeType op1, string s1, string s2, string s3):
   op(op1), result(s1), arg1(s2), arg2(s3) {}
 
+quad::quad(opcodeType op1, string s1, string s2):
+  op(op1), result(s1), arg1(s2), arg2(0) {}
+
 // for instructions with int constants
-void quad::emit(opcodeType op1, string s1, int num):
+quad::quad(opcodeType op1, string s1, int num):
   op(op1), result(s1), arg1(0), arg2(0) {
 	arg1 = to_string(num);
   }
 
 // for instructions with float constants
-void quad::emit(opcodeType op1, string s1, float num):
+quad::quad(opcodeType op1, string s1, float num):
   op(op1), result(s1), arg1(0), arg2(0) {
 	arg1 = to_string(num);
   }
 
 // for copy statement
-void quad::emit(string s1, string s2):
-  op(COPY), result(s1), arg1(s2), arg2(0) {}
+quad::quad(string s1, string s2):
+  op(copy_ins), result(s1), arg1(s2), arg2(0) {}
 
 // for goto statement
-void quad::emit(opcodeType op1, string s1):
+quad::quad(opcodeType op1, string s1):
   op(op1), result(s1) {}
 
 void quad::print() {
-  if ((op <= DIV) && (op >= PLUS)) {
-	printf("%s = %s ", result, arg1);
-	switch(op) {
-	  case PLUS: printf("+"); break;
-	  case MINUS: printf("-"); break;
-	  case MULT: printf("*"); break;
-	  case DIV: printf("/"); break;
+  if ((this->op <= div_ins) && (this->op >= plus_ins)) {
+    cout << this->result << " = " << this->arg1 << endl;
+	switch(this->op) {
+	  case plus_ins: printf("+"); break;
+	  case minus_ins: printf("-"); break;
+	  case mult_ins: printf("*"); break;
+	  case div_ins: printf("/"); break;
 	}
-	printf(" %s\n", arg2);
+  cout << " " << this->arg2 << endl;
   }
-  else if (op == UNARYMINUS) {
-	  printf("%s = - %s\n", result, arg1);
+  else if (this->op == unaryminus_ins) {
+    cout << this->result << " = - " << this->arg1 << endl;
   }
-  else if (op == COPY) {
-	printf("%s = %s\n", result, arg1);
+  else if (this->op == copy_ins) {
+    cout << this->result << " = " << this->arg1 << endl;
   }
-  else if (op == UNCONDITIONAL_JUMP) {
-	printf("goto %s\n", result);
+  else if (this->op == unconditional_jump_ins) {
+    cout << "goto " << this->result << endl;
   }
+  else if (this->op == return_ins) {
+    cout << "return" << endl;
+  }
+
 }
+
 

@@ -10,6 +10,7 @@
 %{
 
 #include "y.tab.h"
+#include "asgn4_17CS10030_translator.h"
 #include <math.h>
 void comment (void);
 extern void yyerror(const char *);
@@ -151,5 +152,5 @@ void comment(void) {
 		prev = c;
 	}
 	/* else there is an error */
-	error("ERROR: Improper Comments");
+	yyerror("ERROR: Improper Comments");
 }

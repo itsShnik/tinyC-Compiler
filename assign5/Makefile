@@ -4,7 +4,7 @@ a.out: y.tab.o lex.yy.o
 lex.yy.o: lex.yy.c
 	g++ -c lex.yy.c
 
-y.tab.o: y.tab.c
+y.tab.o: y.tab.c 
 	g++ -c y.tab.c
 
 lex.yy.c: asgn4_17CS10030.l
@@ -14,4 +14,4 @@ y.tab.c: asgn4_17CS10030.y
 	yacc -dtv asgn4_17CS10030.y
 
 clean: 
-	rm -f lex.yy.c y.tab.c lex.yy.o y.tab.o a.out && clear
+	rm -f lex.yy.c y.tab.c lex.yy.o y.tab.o y.tab.h a.out && clear
