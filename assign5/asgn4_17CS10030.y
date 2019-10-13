@@ -32,15 +32,15 @@
 
 /*--------------- Declaration of Union -------------*/
 %union {
-	expression *E;
-	boolean_expression *BE;
-	statement *S;
+	void *E;
+	void *BE;
+	void *S;
 	int intval;
 	float floatval;
 	char *charval;
 	char *stringval;
 	symboltable *symp;
-  identifier *ID;
+	void *ID;
 }
 
 // Keywords
