@@ -1,11 +1,11 @@
 a.out: y.tab.o lex.yy.o 
-	g++ lex.yy.o y.tab.o -lfl
+	g++ -std=c++11 lex.yy.o y.tab.o -lfl
 
 lex.yy.o: lex.yy.c
-	g++ -c lex.yy.c
+	g++ -std=c++11 -c lex.yy.c
 
 y.tab.o: y.tab.c 
-	g++ -c y.tab.c
+	g++ -std=c++11 -c y.tab.c
 
 lex.yy.c: asgn4_17CS10030.l
 	flex asgn4_17CS10030.l
