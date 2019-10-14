@@ -2,8 +2,13 @@
 //it checks function , declarations, and few conditions
 
 
-void print_arr(int grades, int elements);
 int count_passes(int grades, int elements,int value);
+void print_arr(int grades, int elements)
+{
+	printf("%d ",grades);
+	printf("\n");
+}
+
 
 int main()
 {
@@ -18,12 +23,6 @@ int main()
 		printf("There were %d passes.\n",result);
 
 	return 0;
-}
-
-void print_arr(int grades, int elements)
-{
-	printf("%d ",grades);
-	printf("\n");
 }
 
 int count_passes(int grades, int elements,int value)
