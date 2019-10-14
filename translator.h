@@ -7,7 +7,7 @@
 
 #define CHAR_SIZE 		    1
 #define INT_SIZE  		    4
-#define DOUBLE_SIZE		    4
+#define FLOAT_SIZE		    4
 #define POINTER_SIZE		4
 
 extern  char* yytext;

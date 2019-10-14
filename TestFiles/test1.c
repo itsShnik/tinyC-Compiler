@@ -1,36 +1,17 @@
-//sample code to test if a student passes or not
-//it checks function , declarations, and few conditions
+//program for fibonacci series without recursion
 
-
-int count_passes(int grades, int elements,int value);
-void print_arr(int grades, int elements)
-{
-	printf("%d ",grades);
-	printf("\n");
-}
-
-
-int main()
-{
-	int grades=10;
-	int result;
-	print_arr(grades,10);
-	result = count_passes(grades,10,70);
-	
-	if(result == 1)
-		printf("There was %d pass.\n",result);
-	else
-		printf("There were %d passes.\n",result);
-
-	return 0;
-}
-
-int count_passes(int grades, int elements,int value)
-{
-	int i ,passes = 0 ;
-
-	if(grades>= value)
-		passes++;
-	
-	return(passes);
+int main()    
+{    
+	int n1=0,n2=1,n3,i,number;    
+	printf("Enter the number of elements:");    
+	scanf("%d",&number);    
+	printf("\n%d %d",n1,n2);//printing 0 and 1    
+	for(i=2;i<number;++i)//loop starts from 2 because 0 and 1 are already printed    
+	{    
+		n3=n1+n2;    
+		printf(" %d",n3);    
+		n1=n2;    
+		n2=n3;    
+	}  
+	return 0;  
 }

@@ -367,11 +367,11 @@ sym* conv (sym* s, string t) {
 		if(debugflag == 0){
 			cout << "cout reached in conv sym" << endl;
 		}
-		if (t=="DOUBLE") {
+		if (t=="FLOAT") {
 			if(debugflag == 0){
 				cout << "cout reached " << endl;
 			}	
-			emit ("EQUAL", temp->name, "int2double(" + s->name + ")");
+			emit ("EQUAL", temp->name, "int2float(" + s->name + ")");
 			return temp;
 		}
 		else if (t=="CHAR") {
@@ -383,19 +383,19 @@ sym* conv (sym* s, string t) {
 		}
 		return s;
 	}
-	else if (s->type->type=="DOUBLE" ) {
+	else if (s->type->type=="FLOAT" ) {
 		if (t=="INTEGER") {
 			if(debugflag == 0){
 				cout << "cout reached here" << endl;
 			}
-			emit ("EQUAL", temp->name, "double2int(" + s->name + ")");
+			emit ("EQUAL", temp->name, "float2int(" + s->name + ")");
 			return temp;
 		}
 		else if (t=="CHAR") {
 			if(debugflag == 0){
 				cout << "cout reached here" << endl;
 			}
-			emit ("EQUAL", temp->name, "double2char(" + s->name + ")");
+			emit ("EQUAL", temp->name, "float2char(" + s->name + ")");
 			return temp;
 		}
 		return s;
@@ -408,11 +408,11 @@ sym* conv (sym* s, string t) {
 			emit ("EQUAL", temp->name, "char2int(" + s->name + ")");
 				return temp;
 			}
-		if (t=="DOUBLE") {
+		if (t=="FLOAT") {
 			if(debugflag == 0){
 				cout << "cout reached here" << endl;
 			}
-			emit ("EQUAL", temp->name, "char2double(" + s->name + ")");
+			emit ("EQUAL", temp->name, "char2float(" + s->name + ")");
 				return temp;
 			}
 		return s;
@@ -563,7 +563,7 @@ int size_type (symtype* t){
 	if(t->type=="VOID")	return 0;
 	else if(t->type=="CHAR") return CHAR_SIZE;
 	else if(t->type=="INTEGER")return INT_SIZE;
-	else if(t->type=="DOUBLE") return  DOUBLE_SIZE;
+	else if(t->type=="FLOAT") return  FLOAT_SIZE;
 	if(debugflag == 0){
 		cout << "cout reached here" << endl;
 	}
@@ -581,7 +581,7 @@ string print_type (symtype* t){
 	if(t->type=="VOID")	return "void";
 	else if(t->type=="CHAR") return "char";
 	else if(t->type=="INTEGER") return "integer";
-	else if(t->type=="DOUBLE") return "double";
+	else if(t->type=="FLOAT") return "float";
 	else if(t->type=="PTR") return "ptr("+ print_type(t->ptr)+")";
 	else if(t->type=="ARR") {
 		if(debugflag == 0){
