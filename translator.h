@@ -1,13 +1,13 @@
-#ifndef TRANSLATE
-#define TRANSLATE
-#include <vector>
-#include <algorithm>
+#ifndef TRANSLATE_H
+#define TRANSLATE_H
 #include <bits/stdc++.h>
+#include <algorithm>
+#include <vector>
 #include <iostream>
 
 #define CHAR_SIZE 		    1
 #define INT_SIZE  		    4
-#define DOUBLE_SIZE		    8
+#define DOUBLE_SIZE		    4
 #define POINTER_SIZE		4
 
 extern  char* yytext;
