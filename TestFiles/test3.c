@@ -1,20 +1,16 @@
-// Factorial sample code
-//this tests the function and declaration functionality
-
-
-int testInt = 8;
-void main () {
-	int n = 6;
-	int fn;
-	fn = factorial(n);
-	return;
+int multiplyNumbers(int n);
+int main()
+{
+	int n;
+	printf("Enter a positive integer: ");
+	scanf("%d", &n);
+	printf("Factorial of %d = %ld", n, multiplyNumbers(n));
+	return 0;
 }
-int factorial (int n) {
-	int m = n-1;
-	int r = 1;
-	if (m) {
-		int fn = factorial(m-1);
-		r = n*fn;
-	}
-	return r;
+long int multiplyNumbers(int n)
+{
+	if (n >= 1)
+		return n*multiplyNumbers(n-1);
+	else
+		return 1;
 }

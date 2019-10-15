@@ -2,6 +2,18 @@
 
 int main()    
 {    
+	int a[10];
+	int i = 0;
+
+	for(i = 0; i < 10; i++){
+		a[i] = 9;
+	}
+
+	float d = 6.7;
+	float b = 7.0;
+
+	b = d + a[3];
+	
 	int n1=0,n2=1,n3,i,number;    
 	printf("Enter the number of elements:");    
 	scanf("%d",&number);    
@@ -13,5 +25,5 @@ int main()
 		n1=n2;    
 		n2=n3;    
 	}  
-	return 0;  
+	return 0;
 }

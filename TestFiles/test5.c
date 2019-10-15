@@ -1,43 +1,21 @@
-//Sample code to create php file
-
-
 int main()
 {
-int filehandle=0;
-char filename='c';
-int count;
-printf("enter name\n");
-gets(filename);
-printf("Now counter.\n");
-gets(countername);
-printf("Please count.\n");
-scanf("%d",&count);
+	int* pc, c;
 
-filehandle = creat(countername,S_IREAD|S_IWRITE);
-if(globalInt==0)
-{
-fprintf(fp,"%d",count); 
-fclose(fp);
-}
-else
-printf("cannot open %s ",countername);
+	c = 22;
+	printf("Address of c: %p\n", &c);
+	printf("Value of c: %d\n\n", c);  // 22
 
-filehandle = creat(filename,S_IREAD|S_IWRITE);
+	pc = &c;
+	printf("Address of pointer pc: %p\n", pc);
+	printf("Content of pointer pc: %d\n\n", *pc); // 22
 
-if(globalFloat==0)
-{
-fprintf(fp,"<?php\n");
-fprintf(fp,"$counterFile = \"%s\";\n",countername);
-fprintf(fp,"$line = file($counterFile);\n");
-fprintf(fp,"$line[0] ++ ;\n");
-fprintf(fp,"$fp = fopen($counterFile ,\"w\");\n");
-fprintf(fp,"fputs($fp, \"$line[0]\");\n");
-fprintf(fp,"fclose($fp);\n");
-fprintf(fp,"echo $line[0];\n");
-fprintf(fp,"?>\n");
-fclose(fp);
-}
-else
-printf("cannot create %s",filename);
-return 0;
+	c = 11;
+	printf("Address of pointer pc: %p\n", pc);
+	printf("Content of pointer pc: %d\n\n", *pc); // 11
+
+	*pc = 2;
+	printf("Address of c: %p\n", &c);
+	printf("Value of c: %d\n\n", c); // 2
+	return 0;
 }

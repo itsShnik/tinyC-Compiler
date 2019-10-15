@@ -431,7 +431,7 @@ constant
 	emit("EQUAL", $$->name, $1);
 	}
   |FLOATING_CONSTANT {
-	$$ = gentemp(new symtype("DOUBLE"), string($1));
+	$$ = gentemp(new symtype("FLOAT"), string($1));
 	emit("EQUAL", $$->name, string($1));
 	}
 	;
@@ -1232,14 +1232,14 @@ type_specifier
 	: COMPLEX
 	| IMAGINARY
 	| VOID {Type="VOID";}
-	| FLOAT
+	| FLOAT {Type="FLOAT";}
 	| SIGNED
 	| UNSIGNED
 	| CHAR {Type="CHAR";}
 	| INT {Type="INTEGER";}
 	| LONG
 	| BOOL
-	| DOUBLE {Type="DOUBLE";}
+	| DOUBLE 
 	| SHORT 
 	| enum_specifier
 	;

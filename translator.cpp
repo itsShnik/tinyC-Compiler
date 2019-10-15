@@ -1,7 +1,7 @@
 /*-----------------------------------------------
 | Nikhil Shah (17CS10030)
 | Apoorve Singhal (17CS30007)
-| File: Bison Specifications for Compiler
+| File: Main file for Compiler
 | Written on: Sept. 28, '19
 | Last Modified: Oct. 14, '19
 -----------------------------------------------*/
@@ -159,6 +159,7 @@ void quadArray::print() {
 	cout << "Some notes, conventions and clarifications" << endl;
 	cout << "1. If the name of a function appears twice in the three adress code, it is because\n there is one for the prototype declaration and the other for the definition" << endl;
 	cout << "2. 'param' indicates that the next variable is passed as a parameter to function" << endl;
+	cout << "3. The entry in the symbol table named as 'return' corresponds to the return type\n of that function." << endl;
 	cout << setw(130) << setfill ('=') << "="<< endl << endl;
 	if(debugflag == 0){
 		cout << "cout reached here" << endl;

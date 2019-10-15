@@ -22,6 +22,7 @@ clean:
 	rm -f lex.yy.c parser.tab.c parser.tab.h lex.yy.o parser.tab.o translator.o parser.output a.out translator.h.gch && clear
 
 run: a.out
+	mkdir -p Test\ Outputs
 	./a.out < TestFiles/test1.c > Test\ Outputs/quads1.out
 	./a.out < TestFiles/test2.c > Test\ Outputs/quads2.out
 	./a.out < TestFiles/test3.c > Test\ Outputs/quads3.out
