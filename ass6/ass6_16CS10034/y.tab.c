@@ -62,11 +62,11 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "ass6_16CS10034.y" /* yacc.c:339  */
+#line 1 "ass6_17CS10030_17CS30007.y" /* yacc.c:339  */
 
 #include <bits/stdc++.h>
 #include <sstream>
-#include "ass6_16CS10034_translator.h"
+#include "ass6_17CS10030_17CS30007_translator.h"
 
 extern int yylex();
 void yyerror(string s);
@@ -301,7 +301,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 15 "ass6_16CS10034.y" /* yacc.c:355  */
+#line 15 "ass6_17CS10030_17CS30007.y" /* yacc.c:355  */
 
   int intval;
   char* charval;
@@ -1858,7 +1858,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 168 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 168 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	(yyval.E) = new expr();
 	(yyval.E)->loc = (yyvsp[0].symp);
@@ -1868,7 +1868,7 @@ yyreduce:
     break;
 
   case 3:
-#line 173 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 173 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	(yyval.E) = new expr();
 	(yyval.E)->loc = (yyvsp[0].symp);
@@ -1877,7 +1877,7 @@ yyreduce:
     break;
 
   case 4:
-#line 177 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 177 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	(yyval.E) = new expr();
 	sym_type* tmp = new sym_type("PTR");
@@ -1896,7 +1896,7 @@ yyreduce:
     break;
 
   case 5:
-#line 191 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 191 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	(yyval.E) = (yyvsp[-1].E);
 	}
@@ -1904,7 +1904,7 @@ yyreduce:
     break;
 
   case 6:
-#line 197 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 197 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	stringstream strs;
     strs << (yyvsp[0].intval);
@@ -1918,7 +1918,7 @@ yyreduce:
     break;
 
   case 7:
-#line 206 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 206 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	(yyval.symp) = gentemp(new sym_type("DOUBLE"), string((yyvsp[0].charval)));
 	emit("EQUAL", (yyval.symp)->name, string((yyvsp[0].charval)));
@@ -1927,14 +1927,14 @@ yyreduce:
     break;
 
   case 8:
-#line 210 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 210 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 1934 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 212 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 212 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	(yyval.symp) = gentemp(new sym_type("CHAR"),(yyvsp[0].charval));
 	emit("EQUALCHAR", (yyval.symp)->name, string((yyvsp[0].charval)));
@@ -1943,7 +1943,7 @@ yyreduce:
     break;
 
   case 10:
-#line 220 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 220 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.A) = new array ();
 		(yyval.A)->array = (yyvsp[0].E)->loc;
@@ -1954,7 +1954,7 @@ yyreduce:
     break;
 
   case 11:
-#line 226 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 226 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.A) = new array();
 		
@@ -1989,7 +1989,7 @@ yyreduce:
     break;
 
   case 12:
-#line 256 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 256 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	//later
 	}
@@ -1997,7 +1997,7 @@ yyreduce:
     break;
 
   case 13:
-#line 259 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 259 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.A) = new array();
 		(yyval.A)->array = gentemp((yyvsp[-3].A)->type);
@@ -2012,21 +2012,21 @@ yyreduce:
     break;
 
   case 14:
-#line 269 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 269 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2019 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 271 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 271 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2026 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 273 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 273 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.A) = new array();
 
@@ -2041,7 +2041,7 @@ yyreduce:
     break;
 
   case 17:
-#line 283 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 283 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.A) = new array();
 
@@ -2056,7 +2056,7 @@ yyreduce:
     break;
 
   case 18:
-#line 293 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 293 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		//later to be added more
 		(yyval.A) = new array();
@@ -2067,7 +2067,7 @@ yyreduce:
     break;
 
   case 19:
-#line 299 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 299 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		//later to be added more
 		(yyval.A) = new array();
@@ -2078,7 +2078,7 @@ yyreduce:
     break;
 
   case 20:
-#line 308 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 308 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	emit ("PARAM", (yyvsp[0].E)->loc->name);
 	(yyval.intval) = 1;
@@ -2087,7 +2087,7 @@ yyreduce:
     break;
 
   case 21:
-#line 312 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 312 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	emit ("PARAM", (yyvsp[0].E)->loc->name);
 	(yyval.intval) = (yyvsp[-2].intval)+1;
@@ -2096,7 +2096,7 @@ yyreduce:
     break;
 
   case 22:
-#line 319 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 319 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	(yyval.A) = (yyvsp[0].A);
 	}
@@ -2104,7 +2104,7 @@ yyreduce:
     break;
 
   case 23:
-#line 322 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 322 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		// Increment $2
 		emit ("ADD", (yyvsp[0].A)->array->name, (yyvsp[0].A)->array->name, "1");
@@ -2116,7 +2116,7 @@ yyreduce:
     break;
 
   case 24:
-#line 329 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 329 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		// Decrement $2
 		emit ("SUB", (yyvsp[0].A)->array->name, (yyvsp[0].A)->array->name, "1");
@@ -2128,7 +2128,7 @@ yyreduce:
     break;
 
   case 25:
-#line 336 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 336 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.A) = new array();
 		switch ((yyvsp[-1].unaryOperator)) {
@@ -2166,7 +2166,7 @@ yyreduce:
     break;
 
   case 26:
-#line 369 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 369 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	//later
 	}
@@ -2174,7 +2174,7 @@ yyreduce:
     break;
 
   case 27:
-#line 372 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 372 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	//later
 	}
@@ -2182,7 +2182,7 @@ yyreduce:
     break;
 
   case 28:
-#line 378 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 378 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.unaryOperator) = '&';
 	}
@@ -2190,7 +2190,7 @@ yyreduce:
     break;
 
   case 29:
-#line 381 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 381 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.unaryOperator) = '*';
 	}
@@ -2198,7 +2198,7 @@ yyreduce:
     break;
 
   case 30:
-#line 384 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 384 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.unaryOperator) = '+';
 	}
@@ -2206,7 +2206,7 @@ yyreduce:
     break;
 
   case 31:
-#line 387 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 387 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.unaryOperator) = '-';
 	}
@@ -2214,7 +2214,7 @@ yyreduce:
     break;
 
   case 32:
-#line 390 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 390 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.unaryOperator) = '~';
 	}
@@ -2222,7 +2222,7 @@ yyreduce:
     break;
 
   case 33:
-#line 393 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 393 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.unaryOperator) = '!';
 	}
@@ -2230,7 +2230,7 @@ yyreduce:
     break;
 
   case 34:
-#line 399 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 399 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.A)=(yyvsp[0].A);
 	}
@@ -2238,7 +2238,7 @@ yyreduce:
     break;
 
   case 35:
-#line 402 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 402 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		//to be added later
 		(yyval.A)=(yyvsp[0].A);
@@ -2247,7 +2247,7 @@ yyreduce:
     break;
 
   case 36:
-#line 409 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 409 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.E) = new expr();
 		if ((yyvsp[0].A)->cat=="ARR") { // Array
@@ -2265,7 +2265,7 @@ yyreduce:
     break;
 
   case 37:
-#line 422 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 422 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].A)->array) ) {
 			(yyval.E) = new expr();
@@ -2278,7 +2278,7 @@ yyreduce:
     break;
 
   case 38:
-#line 430 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 430 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].A)->array) ) {
 			(yyval.E) = new expr();
@@ -2291,7 +2291,7 @@ yyreduce:
     break;
 
   case 39:
-#line 438 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 438 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].A)->array) ) {
 			(yyval.E) = new expr();
@@ -2304,7 +2304,7 @@ yyreduce:
     break;
 
   case 40:
-#line 449 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 449 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.E)=(yyvsp[0].E);
 	}
@@ -2312,7 +2312,7 @@ yyreduce:
     break;
 
   case 41:
-#line 452 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 452 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			(yyval.E) = new expr();
@@ -2325,7 +2325,7 @@ yyreduce:
     break;
 
   case 42:
-#line 460 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 460 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 			if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			(yyval.E) = new expr();
@@ -2339,7 +2339,7 @@ yyreduce:
     break;
 
   case 43:
-#line 472 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 472 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.E)=(yyvsp[0].E);
 	}
@@ -2347,7 +2347,7 @@ yyreduce:
     break;
 
   case 44:
-#line 475 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 475 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if ((yyvsp[0].E)->loc->type->type == "INTEGER") {
 			(yyval.E) = new expr();
@@ -2360,7 +2360,7 @@ yyreduce:
     break;
 
   case 45:
-#line 483 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 483 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if ((yyvsp[0].E)->loc->type->type == "INTEGER") {
 			(yyval.E) = new expr();
@@ -2373,13 +2373,13 @@ yyreduce:
     break;
 
   case 46:
-#line 494 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 494 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2379 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 495 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 495 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			(yyval.E) = new expr();
@@ -2396,7 +2396,7 @@ yyreduce:
     break;
 
   case 48:
-#line 507 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 507 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			(yyval.E) = new expr();
@@ -2413,7 +2413,7 @@ yyreduce:
     break;
 
   case 49:
-#line 519 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 519 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			(yyval.E) = new expr();
@@ -2430,7 +2430,7 @@ yyreduce:
     break;
 
   case 50:
-#line 531 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 531 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			(yyval.E) = new expr();
@@ -2447,13 +2447,13 @@ yyreduce:
     break;
 
   case 51:
-#line 546 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 546 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2453 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 547 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 547 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc)) {
 			bool2int ((yyvsp[-2].E));
@@ -2473,7 +2473,7 @@ yyreduce:
     break;
 
   case 53:
-#line 562 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 562 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			// If any is bool get its value
@@ -2494,13 +2494,13 @@ yyreduce:
     break;
 
   case 54:
-#line 581 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 581 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2500 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 582 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 582 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			// If any is bool get its value
@@ -2519,13 +2519,13 @@ yyreduce:
     break;
 
   case 56:
-#line 599 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 599 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2525 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 600 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 600 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			// If any is bool get its value
@@ -2544,13 +2544,13 @@ yyreduce:
     break;
 
   case 58:
-#line 617 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 617 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2550 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 618 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 618 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if (typecheck ((yyvsp[-2].E)->loc, (yyvsp[0].E)->loc) ) {
 			// If any is bool get its value
@@ -2569,13 +2569,13 @@ yyreduce:
     break;
 
   case 60:
-#line 635 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 635 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2575 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 636 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 636 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		int2bool((yyvsp[0].E));
 
@@ -2594,13 +2594,13 @@ yyreduce:
     break;
 
   case 62:
-#line 653 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 653 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2600 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 654 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 654 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		int2bool((yyvsp[0].E));
 
@@ -2619,7 +2619,7 @@ yyreduce:
     break;
 
   case 64:
-#line 670 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 670 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {	// To store the address of the next instruction
 		(yyval.instr) = nextinstr();
 	}
@@ -2627,7 +2627,7 @@ yyreduce:
     break;
 
   case 65:
-#line 674 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 674 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     { 	// gaurd against fallthrough by emitting a goto
 		(yyval.S)  = new statement();
 		(yyval.S)->nextlist = makelist(nextinstr());
@@ -2637,13 +2637,13 @@ yyreduce:
     break;
 
   case 66:
-#line 681 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 681 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2643 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 682 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 682 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.E)->loc = gentemp((yyvsp[-4].E)->loc->type);
 		(yyval.E)->loc->update((yyvsp[-4].E)->loc->type);
@@ -2670,13 +2670,13 @@ yyreduce:
     break;
 
   case 68:
-#line 707 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 707 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2676 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 708 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 708 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if((yyvsp[-2].A)->cat=="ARR") {
 			(yyvsp[0].E)->loc = conv((yyvsp[0].E)->loc, (yyvsp[-2].A)->type->type);
@@ -2695,90 +2695,90 @@ yyreduce:
     break;
 
   case 70:
-#line 725 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 725 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2702 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 727 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 727 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2709 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 729 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 729 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2716 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 731 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 731 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2723 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 733 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 733 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2730 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 735 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 735 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2737 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 737 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 737 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2744 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 739 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 739 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2751 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 741 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 741 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2758 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 743 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 743 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2765 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 745 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 745 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2772 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 750 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 750 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[0].E);}
 #line 2778 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 751 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 751 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	//later
 	}
@@ -2786,7 +2786,7 @@ yyreduce:
     break;
 
   case 83:
-#line 757 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 757 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 	//later
 	}
@@ -2794,97 +2794,97 @@ yyreduce:
     break;
 
   case 84:
-#line 763 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 763 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2801 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 765 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 765 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2808 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 771 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 771 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2815 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 773 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 773 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2822 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 775 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 775 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2829 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 777 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 777 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2836 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 779 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 779 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2843 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 781 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 781 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2850 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 783 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 783 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2857 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 785 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 785 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2864 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 790 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 790 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2871 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 792 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 792 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2878 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 797 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 797 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.symp)=(yyvsp[0].symp);}
 #line 2884 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 798 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 798 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		if ((yyvsp[0].symp)->initial_value!="") (yyvsp[-2].symp)->initial_value=(yyvsp[0].symp)->initial_value;
 		emit ("EQUAL", (yyvsp[-2].symp)->name, (yyvsp[0].symp)->name);
@@ -2893,178 +2893,178 @@ yyreduce:
     break;
 
   case 98:
-#line 805 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 805 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2900 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 807 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 807 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2907 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 809 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 809 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2914 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 811 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 811 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2921 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 816 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 816 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {Type="VOID";}
 #line 2927 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 817 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 817 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {Type="CHAR";}
 #line 2933 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 819 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 819 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {Type="INTEGER";}
 #line 2939 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
-#line 822 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 822 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {Type="DOUBLE";}
 #line 2945 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 115:
-#line 832 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 832 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2952 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 116:
-#line 834 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 834 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2959 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 117:
-#line 836 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 836 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2966 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 118:
-#line 838 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 838 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2973 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 119:
-#line 843 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 843 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2980 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 120:
-#line 845 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 845 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2987 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 121:
-#line 847 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 847 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 2994 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 122:
-#line 849 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 849 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3001 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 123:
-#line 851 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 851 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3008 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 124:
-#line 856 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 856 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3015 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 125:
-#line 858 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 858 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3022 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 126:
-#line 863 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 863 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3029 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 127:
-#line 865 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 865 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3036 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 128:
-#line 870 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 870 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3043 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 129:
-#line 872 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 872 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3050 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 130:
-#line 874 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 874 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3057 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 131:
-#line 879 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 879 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3064 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 132:
-#line 884 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 884 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		sym_type * t = (yyvsp[-1].symtp);
 		while (t->ptr !=NULL) t = t->ptr;
@@ -3075,14 +3075,14 @@ yyreduce:
     break;
 
   case 133:
-#line 890 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 890 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3082 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 134:
-#line 896 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 896 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.symp) = (yyvsp[0].symp)->update(new sym_type(Type));
 		currentsymbol = (yyval.symp);
@@ -3091,27 +3091,27 @@ yyreduce:
     break;
 
   case 135:
-#line 900 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 900 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.symp)=(yyvsp[-1].symp);}
 #line 3097 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 136:
-#line 901 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 901 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3104 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 137:
-#line 903 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 903 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3111 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 138:
-#line 905 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 905 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		sym_type * t = (yyvsp[-3].symp) -> type;
 		sym_type * prev = NULL;
@@ -3133,7 +3133,7 @@ yyreduce:
     break;
 
   case 139:
-#line 922 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 922 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		sym_type * t = (yyvsp[-2].symp) -> type;
 		sym_type * prev = NULL;
@@ -3154,35 +3154,35 @@ yyreduce:
     break;
 
   case 140:
-#line 938 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 938 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3161 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 141:
-#line 940 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 940 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3168 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 142:
-#line 942 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 942 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3175 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 143:
-#line 944 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 944 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3182 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 144:
-#line 946 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 946 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		table->name = (yyvsp[-4].symp)->name;
 
@@ -3200,14 +3200,14 @@ yyreduce:
     break;
 
   case 145:
-#line 959 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 959 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3207 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 146:
-#line 961 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 961 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		table->name = (yyvsp[-3].symp)->name;
 
@@ -3226,7 +3226,7 @@ yyreduce:
     break;
 
   case 147:
-#line 978 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 978 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     { 															// Used for changing to symbol table for a function
 		if (currentsymbol->nested==NULL) changeTable(new symTable(""));	// Function symbol table doesn't already exist
 		else {
@@ -3238,14 +3238,14 @@ yyreduce:
     break;
 
   case 148:
-#line 988 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 988 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3245 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 149:
-#line 990 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 990 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.symtp) = new sym_type("PTR");
 	}
@@ -3253,14 +3253,14 @@ yyreduce:
     break;
 
   case 150:
-#line 993 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 993 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3260 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 151:
-#line 995 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 995 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.symtp) = new sym_type("PTR", (yyvsp[0].symtp));
 	}
@@ -3268,49 +3268,49 @@ yyreduce:
     break;
 
   case 152:
-#line 1001 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1001 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3275 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 153:
-#line 1003 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1003 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3282 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 154:
-#line 1008 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1008 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3289 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 155:
-#line 1010 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1010 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3296 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 156:
-#line 1015 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1015 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3303 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 157:
-#line 1017 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1017 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3310 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 158:
-#line 1022 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1022 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyvsp[0].symp)->category = "param";
 	}
@@ -3318,35 +3318,35 @@ yyreduce:
     break;
 
   case 159:
-#line 1025 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1025 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3325 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 160:
-#line 1030 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1030 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3332 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 161:
-#line 1032 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1032 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3339 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 162:
-#line 1037 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1037 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3346 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 163:
-#line 1042 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1042 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.symp) = (yyvsp[0].E)->loc;
 	}
@@ -3354,97 +3354,97 @@ yyreduce:
     break;
 
   case 164:
-#line 1045 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1045 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3361 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 165:
-#line 1047 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1047 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3368 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 166:
-#line 1053 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1053 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3375 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 167:
-#line 1055 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1055 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3382 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 168:
-#line 1057 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1057 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3389 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 169:
-#line 1059 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1059 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3396 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 170:
-#line 1064 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1064 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3403 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 171:
-#line 1069 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1069 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3410 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 172:
-#line 1071 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1071 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3417 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 173:
-#line 1076 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1076 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3424 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 174:
-#line 1078 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1078 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3431 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 175:
-#line 1083 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1083 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3438 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 176:
-#line 1085 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1085 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S)=(yyvsp[0].S);}
 #line 3444 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 177:
-#line 1086 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1086 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S) = new statement();
 		(yyval.S)->nextlist = (yyvsp[0].E)->nextlist;
@@ -3453,61 +3453,61 @@ yyreduce:
     break;
 
   case 178:
-#line 1090 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1090 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S)=(yyvsp[0].S);}
 #line 3459 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 179:
-#line 1091 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1091 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S)=(yyvsp[0].S);}
 #line 3465 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 180:
-#line 1092 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1092 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S)=(yyvsp[0].S);}
 #line 3471 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 181:
-#line 1096 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1096 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S) = new statement();}
 #line 3477 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 182:
-#line 1097 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1097 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S) = new statement();}
 #line 3483 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 183:
-#line 1098 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1098 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S) = new statement();}
 #line 3489 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 184:
-#line 1102 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1102 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S)=(yyvsp[-1].S);}
 #line 3495 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 185:
-#line 1103 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1103 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S) = new statement();}
 #line 3501 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 186:
-#line 1107 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1107 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S)=(yyvsp[0].S);}
 #line 3507 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 187:
-#line 1108 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1108 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S)=(yyvsp[0].S);
 		backpatch ((yyvsp[-2].S)->nextlist, (yyvsp[-1].instr));
@@ -3516,7 +3516,7 @@ yyreduce:
     break;
 
   case 188:
-#line 1115 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1115 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S) = new statement();
 	}
@@ -3524,25 +3524,25 @@ yyreduce:
     break;
 
   case 189:
-#line 1118 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1118 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S) = (yyvsp[0].S);}
 #line 3530 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 190:
-#line 1122 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1122 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E)=(yyvsp[-1].E);}
 #line 3536 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 191:
-#line 1123 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1123 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.E) = new expr();}
 #line 3542 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 192:
-#line 1127 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1127 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		backpatch ((yyvsp[-4].S)->nextlist, nextinstr());
 		int2bool((yyvsp[-5].E));
@@ -3555,7 +3555,7 @@ yyreduce:
     break;
 
   case 193:
-#line 1135 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1135 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		backpatch ((yyvsp[-7].S)->nextlist, nextinstr());
 		int2bool((yyvsp[-8].E));
@@ -3569,14 +3569,14 @@ yyreduce:
     break;
 
   case 194:
-#line 1144 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1144 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3576 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 195:
-#line 1149 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1149 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S) = new statement();
 		int2bool((yyvsp[-3].E));
@@ -3598,7 +3598,7 @@ yyreduce:
     break;
 
   case 196:
-#line 1166 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1166 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S) = new statement();
 		int2bool((yyvsp[-2].E));
@@ -3614,7 +3614,7 @@ yyreduce:
     break;
 
   case 197:
-#line 1177 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1177 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S) = new statement();
 		int2bool((yyvsp[-3].E));
@@ -3633,7 +3633,7 @@ yyreduce:
     break;
 
   case 198:
-#line 1191 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1191 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S) = new statement();
 		int2bool((yyvsp[-6].E));
@@ -3652,25 +3652,25 @@ yyreduce:
     break;
 
   case 199:
-#line 1208 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1208 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S) = new statement();}
 #line 3658 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 200:
-#line 1209 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1209 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S) = new statement();}
 #line 3664 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 201:
-#line 1210 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1210 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {(yyval.S) = new statement();}
 #line 3670 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 202:
-#line 1211 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1211 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S) = new statement();
 		emit("RETURN",(yyvsp[-1].E)->loc->name);
@@ -3679,7 +3679,7 @@ yyreduce:
     break;
 
   case 203:
-#line 1215 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1215 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		(yyval.S) = new statement();
 		emit("RETURN","");
@@ -3688,37 +3688,37 @@ yyreduce:
     break;
 
   case 204:
-#line 1222 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1222 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {}
 #line 3694 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 205:
-#line 1223 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1223 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {}
 #line 3700 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 206:
-#line 1227 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1227 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {}
 #line 3706 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 207:
-#line 1228 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1228 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {}
 #line 3712 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 208:
-#line 1232 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1232 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {}
 #line 3718 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 209:
-#line 1233 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1233 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {
 		emit ("FUNCEND", table->name);
 		table->parent = globalsymbolTable;
@@ -3728,14 +3728,14 @@ yyreduce:
     break;
 
   case 210:
-#line 1241 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1241 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3735 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 211:
-#line 1243 "ass6_16CS10034.y" /* yacc.c:1646  */
+#line 1243 "ass6_17CS10030_17CS30007.y" /* yacc.c:1646  */
     {//later
 	}
 #line 3742 "y.tab.c" /* yacc.c:1646  */
@@ -3970,7 +3970,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1249 "ass6_16CS10034.y" /* yacc.c:1906  */
+#line 1249 "ass6_17CS10030_17CS30007.y" /* yacc.c:1906  */
 
 
 void yyerror(string s) {

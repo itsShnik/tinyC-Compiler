@@ -645,11 +645,11 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "ass6_16CS10034.l"
-#line 2 "ass6_16CS10034.l"
+#line 1 "ass6_17CS10030_17CS30007.l"
+#line 2 "ass6_17CS10030_17CS30007.l"
 #include <stdio.h>
 #include <string.h>
-#include "ass6_16CS10034_translator.h"
+#include "ass6_17CS10030_17CS30007_translator.h"
 #include "y.tab.h"
 /*For each of the corresponding tokens we have the corresponding regular expressions*/
 /*For single line and multi line comments*/
@@ -876,7 +876,7 @@ YY_DECL
 		}
 
 	{
-#line 63 "ass6_16CS10034.l"
+#line 63 "ass6_17CS10030_17CS30007.l"
 
 #line 882 "lex.yy.c"
 
@@ -937,7 +937,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 64 "ass6_16CS10034.l"
+#line 64 "ass6_17CS10030_17CS30007.l"
 {
 	if(strcmp(yytext,"goto")==0)			{ return GOTO; }    /*Returning the corresponding label  for each token*/
 	if(strcmp(yytext,"sizeof")==0)			{ return SIZEOF; }
@@ -981,7 +981,7 @@ YY_RULE_SETUP
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 104 "ass6_16CS10034.l"
+#line 104 "ass6_17CS10030_17CS30007.l"
 {
 	yylval.charval = yytext;   /*If it is a string literal then we just assign the value to the text */
 	return STRING_LITERAL;
@@ -989,7 +989,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 109 "ass6_16CS10034.l"
+#line 109 "ass6_17CS10030_17CS30007.l"
 {
 	yylval.symp = table->lookup(yytext);  /* for each identifier we lookup the corresponding value in the symbol table */
 	return IDENTIFIER;
@@ -997,7 +997,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 114 "ass6_16CS10034.l"
+#line 114 "ass6_17CS10030_17CS30007.l"
 {
 	yylval.intval = atoi(yytext);        /* Converting the yytext to an integer and assigning it to the integer value*/
 	return INTEGER_CONSTANT;
@@ -1005,7 +1005,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 119 "ass6_16CS10034.l"
+#line 119 "ass6_17CS10030_17CS30007.l"
 {
 	yylval.charval = yytext;           /* yylval's charval is assigning ot yytext*/
 	return FLOATING_CONSTANT;
@@ -1014,7 +1014,7 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 124 "ass6_16CS10034.l"
+#line 124 "ass6_17CS10030_17CS30007.l"
 {
 	yylval.charval = yytext;
 	return CHARACTER_CONSTANT;
@@ -1022,7 +1022,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 130 "ass6_16CS10034.l"
+#line 130 "ass6_17CS10030_17CS30007.l"
 {
 
 	if(strcmp(yytext,"++") == 0) return INC;     /* For each of the corresponding token , returning the value*/
@@ -1081,14 +1081,14 @@ YY_RULE_SETUP
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 184 "ass6_16CS10034.l"
+#line 184 "ass6_17CS10030_17CS30007.l"
 {
 
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 187 "ass6_16CS10034.l"
+#line 187 "ass6_17CS10030_17CS30007.l"
 ECHO;
 	YY_BREAK
 #line 1095 "lex.yy.c"
@@ -2092,7 +2092,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 187 "ass6_16CS10034.l"
+#line 187 "ass6_17CS10030_17CS30007.l"
 
 
 

@@ -1,0 +1,365 @@
+===================================================================================================================
+symbol Table: Global                                                             Parent: null
+----------------------------------------------------------------------------------------------------
+Name                Type                     Category       Initial Value       Size        Offset      Nested
+-------------------------------------------------------------------------------------------------------------------
+prints              integer                  function                        4           0          prints
+printi              integer                  function                        4           4          printi
+readi               integer                  function                        4           8          readi
+FibonacciIterative  integer                  function                        4           12         FibonacciIterative
+FibonacciRecursive  integer                  function                        4           16         FibonacciRecursive
+main                integer                  function                        4           20         main
+-------------------------------------------------------------------------------------------------------------------
+
+===================================================================================================================
+symbol Table: prints                                                             Parent: Global
+----------------------------------------------------------------------------------------------------
+Name                Type                     Category       Initial Value       Size        Offset      Nested
+-------------------------------------------------------------------------------------------------------------------
+c                   ptr(char)                param                           4           0          null
+return              integer                  local                           4           4          null
+-------------------------------------------------------------------------------------------------------------------
+
+===================================================================================================================
+symbol Table: printi                                                             Parent: Global
+----------------------------------------------------------------------------------------------------
+Name                Type                     Category       Initial Value       Size        Offset      Nested
+-------------------------------------------------------------------------------------------------------------------
+i                   integer                  param                           4           0          null
+return              integer                  local                           4           4          null
+-------------------------------------------------------------------------------------------------------------------
+
+===================================================================================================================
+symbol Table: readi                                                              Parent: Global
+----------------------------------------------------------------------------------------------------
+Name                Type                     Category       Initial Value       Size        Offset      Nested
+-------------------------------------------------------------------------------------------------------------------
+eP                  ptr(integer)             param                           4           0          null
+return              integer                  local                           4           4          null
+-------------------------------------------------------------------------------------------------------------------
+
+===================================================================================================================
+symbol Table: FibonacciIterative                                                 Parent: Global
+----------------------------------------------------------------------------------------------------
+Name                Type                     Category       Initial Value       Size        Offset      Nested
+-------------------------------------------------------------------------------------------------------------------
+a                   integer                  param                           4           0          null
+return              integer                  local                           4           4          null
+prints              integer                  local                           4           8          null
+t00                 ptr(char)                temp           "function call took place sucessfully "4           12         null
+t01                 integer                  temp                            4           16         null
+f                   integer                  local          1                4           20         null
+t02                 integer                  temp           1                4           24         null
+f_1                 integer                  local          0                4           28         null
+t03                 integer                  temp           0                4           32         null
+i                   integer                  local          1                4           36         null
+t04                 integer                  temp           1                4           40         null
+temp                integer                  local                           4           44         null
+t05                 integer                  temp                            4           48         null
+t06                 integer                  temp                            4           52         null
+t07                 integer                  temp                            4           56         null
+t08                 integer                  temp                            4           60         null
+t09                 integer                  temp           1                4           64         null
+t10                 integer                  temp                            4           68         null
+t11                 integer                  temp                            4           72         null
+t12                 ptr(char)                temp           "\nThe i-th fibonacci number is:"4           76         null
+t13                 integer                  temp                            4           80         null
+printi              integer                  local                           4           84         null
+t14                 integer                  temp                            4           88         null
+t15                 ptr(char)                temp           "\n"             4           92         null
+t16                 integer                  temp                            4           96         null
+-------------------------------------------------------------------------------------------------------------------
+
+===================================================================================================================
+symbol Table: FibonacciRecursive                                                 Parent: Global
+----------------------------------------------------------------------------------------------------
+Name                Type                     Category       Initial Value       Size        Offset      Nested
+-------------------------------------------------------------------------------------------------------------------
+n                   integer                  param                           4           0          null
+return              integer                  local                           4           4          null
+t00                 integer                  temp           1                4           8          null
+t01                 integer                  temp           2                4           12         null
+t02                 integer                  temp           1                4           16         null
+FibonacciRecursive  integer                  local                           4           20         null
+t03                 integer                  temp           1                4           24         null
+t04                 integer                  temp                            4           28         null
+t05                 integer                  temp                            4           32         null
+t06                 integer                  temp           2                4           36         null
+t07                 integer                  temp                            4           40         null
+t08                 integer                  temp                            4           44         null
+t09                 integer                  temp                            4           48         null
+-------------------------------------------------------------------------------------------------------------------
+
+===================================================================================================================
+symbol Table: main                                                               Parent: Global
+----------------------------------------------------------------------------------------------------
+Name                Type                     Category       Initial Value       Size        Offset      Nested
+-------------------------------------------------------------------------------------------------------------------
+return              integer                  local                           4           0          null
+prints              integer                  local                           4           4          null
+t00                 ptr(char)                temp           "Enter for i-th fibonacci number : "4           8          null
+t01                 integer                  temp                            4           12         null
+i                   integer                  local                           4           16         null
+ep                  integer                  local                           4           20         null
+readi               integer                  local                           4           24         null
+t02                 ptr(integer)             temp                            4           28         null
+t03                 integer                  temp                            4           32         null
+t04                 integer                  temp                            4           36         null
+t05                 ptr(char)                temp           "i: "            4           40         null
+t06                 integer                  temp                            4           44         null
+printi              integer                  local                           4           48         null
+t07                 integer                  temp                            4           52         null
+t08                 ptr(char)                temp           "\n"             4           56         null
+t09                 integer                  temp                            4           60         null
+t10                 ptr(char)                temp           "i-th fibonacci number is :"4           64         null
+t11                 ptr(char)                temp           "Fibonacci Iterative"4           68         null
+t12                 integer                  temp                            4           72         null
+t13                 ptr(char)                temp           "\n"             4           76         null
+t14                 integer                  temp                            4           80         null
+j                   integer                  local                           4           84         null
+FibonacciIterative  integer                  local                           4           88         null
+t15                 integer                  temp                            4           92         null
+t16                 integer                  temp                            4           96         null
+t17                 ptr(char)                temp           "successfully returned from the function call Iterative\n"4           100        null
+t18                 integer                  temp                            4           104        null
+-------------------------------------------------------------------------------------------------------------------
+
+==============================
+quad Translation
+------------------------------
+	0   :	FibonacciIterative: 
+
+op
+
+
+param t00
+
+
+t01 = call prints, 1
+
+
+t02 = 1
+
+
+f = t02
+
+
+t03 = 0
+
+
+f_1 = t03
+
+
+t04 = 1
+
+
+i = t04
+
+
+if i < a goto 12
+
+
+goto 20
+
+
+temp = f
+
+
+ = f + f_1
+
+
+f = t06
+
+
+f_1 = temp
+
+
+t09 = 1
+
+
+ = i + t09
+
+
+i = t10
+
+
+goto 10
+
+
+op
+
+
+param t12
+
+
+t13 = call prints, 1
+
+
+param f
+
+
+t14 = call printi, 1
+
+
+op
+
+
+param t15
+
+
+t16 = call prints, 1
+
+
+ret f
+
+
+t00 = 1
+
+
+if n == t00 goto 39
+
+
+goto 35
+
+
+goto 38
+
+
+t01 = 2
+
+
+if n == t01 goto 39
+
+
+goto 42
+
+
+goto 42
+
+
+t02 = 1
+
+
+ret t02
+
+
+goto 42
+
+
+t03 = 1
+
+
+ = n - t03
+
+
+param t04
+
+
+t05 = call FibonacciRecursive, 1
+
+
+t06 = 2
+
+
+ = n - t06
+
+
+param t07
+
+
+t08 = call FibonacciRecursive, 1
+
+
+ = t05 + t08
+
+
+ret t09
+
+
+op
+
+
+param t00
+
+
+t01 = call prints, 1
+
+
+t02 = &ep
+
+
+param t02
+
+
+t03 = call readi, 1
+
+
+i = t03
+
+
+op
+
+
+param t05
+
+
+t06 = call prints, 1
+
+
+param i
+
+
+t07 = call printi, 1
+
+
+op
+
+
+param t08
+
+
+t09 = call prints, 1
+
+
+op
+
+
+op
+
+
+param t11
+
+
+t12 = call prints, 1
+
+
+op
+
+
+param t13
+
+
+t14 = call prints, 1
+
+
+param i
+
+
+t15 = call FibonacciIterative, 1
+
+
+j = t15
+
+
+op
+
+
+param t17
+
+
+t18 = call prints, 1
+
+
+ret 
+
+------------------------------
