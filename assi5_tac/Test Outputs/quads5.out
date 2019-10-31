@@ -1,0 +1,103 @@
+==================================================================================================================================
+Some notes, conventions and clarifications
+1. If the name of a function appears twice in the three adress code, it is because
+ there is one for the prototype declaration and the other for the definition
+2. 'param' indicates that the next variable is passed as a parameter to function
+3. The entry in the symbol table named as 'return' corresponds to the return type
+ of that function.
+==================================================================================================================================
+
+==================================================================================================================================
+Three Adress Codes (TAC)
+----------------------------------------------------------------------------------------------------------------------------------
+
+main: 
+
+	   1:	t00 = 22
+	   2:	c = t00
+	   3:	param t02
+	   4:	t03 = &c
+	   5:	param t03
+	   6:	t04 = call printf, 2
+	   7:	param t05
+	   8:	param c
+	   9:	t06 = call printf, 2
+	  10:	t07 = &c
+	  11:	pc = t07
+	  12:	param t09
+	  13:	param pc
+	  14:	t10 = call printf, 2
+	  15:	param t11
+	  16:	t12 = *pc
+	  17:	param t12
+	  18:	t13 = call printf, 2
+	  19:	t14 = 11
+	  20:	c = t14
+	  21:	param t16
+	  22:	param pc
+	  23:	t17 = call printf, 2
+	  24:	param t18
+	  25:	t19 = *pc
+	  26:	param t19
+	  27:	t20 = call printf, 2
+	  28:	t21 = *pc
+	  29:	t22 = 2
+	  30:	*pc = t22
+	  31:	param t23
+	  32:	t24 = &c
+	  33:	param t24
+	  34:	t25 = call printf, 2
+	  35:	param t26
+	  36:	param c
+	  37:	t27 = call printf, 2
+	  38:	t28 = 0
+	  39:	ret t28
+----------------------------------------------------------------------------------------------------------------------------------
+==================================================================================================================================
+Symbol Table: Global                                                             Parent: null
+----------------------------------------------------------------------------------------------------------------------------------
+Name                Type                     Initial Value       Size        Offset      Nested
+----------------------------------------------------------------------------------------------------------------------------------
+main                integer                                   4           0          main
+----------------------------------------------------------------------------------------------------------------------------------
+
+==================================================================================================================================
+Symbol Table: main                                                               Parent: Global
+----------------------------------------------------------------------------------------------------------------------------------
+Name                Type                     Initial Value       Size        Offset      Nested
+----------------------------------------------------------------------------------------------------------------------------------
+return              integer                                   4           0          null
+pc                  ptr(integer)                              4           4          null
+c                   integer                                   4           8          null
+t00                 integer                  22               4           12         null
+t01                 integer                                   4           16         null
+printf              integer                                   4           20         null
+t02                 ptr(char)                "Address of c: %p\n"4           24         null
+t03                 ptr(integer)                              4           28         null
+t04                 integer                                   4           32         null
+t05                 ptr(char)                "Value of c: %d\n\n"4           36         null
+t06                 integer                                   4           40         null
+t07                 ptr(integer)                              4           44         null
+t08                 ptr(null)                                 4           48         null
+t09                 ptr(char)                "Address of pointer pc: %p\n"4           52         null
+t10                 integer                                   4           56         null
+t11                 ptr(char)                "Content of pointer pc: %d\n\n"4           60         null
+t12                 integer                                   4           64         null
+t13                 integer                                   4           68         null
+t14                 integer                  11               4           72         null
+t15                 integer                                   4           76         null
+t16                 ptr(char)                "Address of pointer pc: %p\n"4           80         null
+t17                 integer                                   4           84         null
+t18                 ptr(char)                "Content of pointer pc: %d\n\n"4           88         null
+t19                 integer                                   4           92         null
+t20                 integer                                   4           96         null
+t21                 integer                                   4           100        null
+t22                 integer                  2                4           104        null
+t23                 ptr(char)                "Address of c: %p\n"4           108        null
+t24                 ptr(integer)                              4           112        null
+t25                 integer                                   4           116        null
+t26                 ptr(char)                "Value of c: %d\n\n"4           120        null
+t27                 integer                                   4           124        null
+t28                 integer                  0                4           128        null
+----------------------------------------------------------------------------------------------------------------------------------
+

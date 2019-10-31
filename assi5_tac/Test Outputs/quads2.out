@@ -1,0 +1,120 @@
+==================================================================================================================================
+Some notes, conventions and clarifications
+1. If the name of a function appears twice in the three adress code, it is because
+ there is one for the prototype declaration and the other for the definition
+2. 'param' indicates that the next variable is passed as a parameter to function
+3. The entry in the symbol table named as 'return' corresponds to the return type
+ of that function.
+==================================================================================================================================
+
+==================================================================================================================================
+Three Adress Codes (TAC)
+----------------------------------------------------------------------------------------------------------------------------------
+
+printFibonacci: 
+
+	   1:	t00 = 0
+	   2:	n1 = t00
+	   3:	t01 = 1
+	   4:	n2 = t01
+	   5:	t02 = 0
+	   6:	goto 9
+	   7:	if n > t02 goto 
+	   8:	goto 21
+	   9:	t03 = n1 + n2
+	  10:	n3 = t03
+	  11:	n1 = n2
+	  12:	n2 = n3
+	  13:	param t07
+	  14:	param n3
+	  15:	t08 = call printf, 2
+	  16:	t09 = 1
+	  17:	t10 = n - t09
+	  18:	param t10
+	  19:	t11 = call printFibonacci, 1
+	  20:	goto 
+
+main: 
+
+	  22:	param t00
+	  23:	t01 = call printf, 1
+	  24:	param t02
+	  25:	t03 = &n
+	  26:	param t03
+	  27:	t04 = call scanf, 2
+	  28:	param t05
+	  29:	t06 = call printf, 1
+	  30:	param t07
+	  31:	t08 = 0
+	  32:	param t08
+	  33:	t09 = 1
+	  34:	param t09
+	  35:	t10 = call printf, 3
+	  36:	t11 = 2
+	  37:	t12 = n - t11
+	  38:	param t12
+	  39:	t13 = call printFibonacci, 1
+	  40:	t14 = 0
+	  41:	ret t14
+----------------------------------------------------------------------------------------------------------------------------------
+==================================================================================================================================
+Symbol Table: Global                                                             Parent: null
+----------------------------------------------------------------------------------------------------------------------------------
+Name                Type                     Initial Value       Size        Offset      Nested
+----------------------------------------------------------------------------------------------------------------------------------
+printFibonacci      void                                      0           0          printFibonacci
+main                integer                                   4           0          main
+----------------------------------------------------------------------------------------------------------------------------------
+
+==================================================================================================================================
+Symbol Table: printFibonacci                                                     Parent: Global
+----------------------------------------------------------------------------------------------------------------------------------
+Name                Type                     Initial Value       Size        Offset      Nested
+----------------------------------------------------------------------------------------------------------------------------------
+n                   integer                                   4           0          null
+n1                  integer                  0                4           4          null
+t00                 integer                  0                4           8          null
+n2                  integer                  1                4           12         null
+t01                 integer                  1                4           16         null
+n3                  integer                                   4           20         null
+t02                 integer                  0                4           24         null
+t03                 integer                                   4           28         null
+t04                 integer                                   4           32         null
+t05                 integer                                   4           36         null
+t06                 integer                                   4           40         null
+printf              integer                                   4           44         null
+t07                 ptr(char)                "%d "            4           48         null
+t08                 integer                                   4           52         null
+printFibonacci      integer                                   4           56         null
+t09                 integer                  1                4           60         null
+t10                 integer                                   4           64         null
+t11                 integer                                   4           68         null
+----------------------------------------------------------------------------------------------------------------------------------
+
+==================================================================================================================================
+Symbol Table: main                                                               Parent: Global
+----------------------------------------------------------------------------------------------------------------------------------
+Name                Type                     Initial Value       Size        Offset      Nested
+----------------------------------------------------------------------------------------------------------------------------------
+return              integer                                   4           0          null
+n                   integer                                   4           4          null
+printf              integer                                   4           8          null
+t00                 ptr(char)                "Enter the number of elements: "4           12         null
+t01                 integer                                   4           16         null
+scanf               integer                                   4           20         null
+t02                 ptr(char)                "%d"             4           24         null
+t03                 ptr(integer)                              4           28         null
+t04                 integer                                   4           32         null
+t05                 ptr(char)                "Fibonacci Series: "4           36         null
+t06                 integer                                   4           40         null
+t07                 ptr(char)                "%d %d "         4           44         null
+t08                 integer                  0                4           48         null
+t09                 integer                  1                4           52         null
+t10                 integer                                   4           56         null
+printFibonacci      integer                                   4           60         null
+t11                 integer                  2                4           64         null
+t12                 integer                                   4           68         null
+t13                 integer                                   4           72         null
+t14                 integer                  0                4           76         null
+----------------------------------------------------------------------------------------------------------------------------------
+

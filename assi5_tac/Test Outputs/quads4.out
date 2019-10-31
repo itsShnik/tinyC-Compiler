@@ -1,0 +1,136 @@
+==================================================================================================================================
+Some notes, conventions and clarifications
+1. If the name of a function appears twice in the three adress code, it is because
+ there is one for the prototype declaration and the other for the definition
+2. 'param' indicates that the next variable is passed as a parameter to function
+3. The entry in the symbol table named as 'return' corresponds to the return type
+ of that function.
+==================================================================================================================================
+
+==================================================================================================================================
+Three Adress Codes (TAC)
+----------------------------------------------------------------------------------------------------------------------------------
+
+main: 
+
+	   1:	param t00
+	   2:	t01 = call printf, 1
+	   3:	param t02
+	   4:	t03 = &n1
+	   5:	param t03
+	   6:	t04 = &n2
+	   7:	param t04
+	   8:	t05 = call scanf, 3
+	   9:	param t06
+	  10:	param n1
+	  11:	param n2
+	  12:	t07 = call printf, 3
+	  13:	t08 = 1
+	  14:	t09 = n1 + t08
+	  15:	i = t09
+	  16:	if i < n2 goto 20
+	  17:	goto 32
+	  18:	i = i + 1
+	  19:	goto 16
+	  20:	param i
+	  21:	t11 = call checkPrimeNumber, 1
+	  22:	flag = t11
+	  23:	t13 = 1
+	  24:	if flag == t13 goto 27
+	  25:	goto 18
+	  26:	goto 31
+	  27:	param t14
+	  28:	param i
+	  29:	t15 = call printf, 2
+	  30:	goto 18
+	  31:	goto 18
+	  32:	t16 = 0
+	  33:	ret t16
+
+checkPrimeNumber: 
+
+
+checkPrimeNumber: 
+
+	  36:	t00 = 1
+	  37:	flag = t00
+	  38:	t01 = 2
+	  39:	j = t01
+	  40:	t03 = 2
+	  41:	t04 = n / t03
+	  42:	if j <= t04 goto 46
+	  43:	goto 55
+	  44:	j = j + 1
+	  45:	goto 40
+	  46:	t05 = n % j
+	  47:	t06 = 0
+	  48:	if t05 == t06 goto 51
+	  49:	goto 44
+	  50:	goto 54
+	  51:	t07 = 0
+	  52:	flag = t07
+	  53:	goto 44
+	  54:	goto 44
+	  55:	ret flag
+----------------------------------------------------------------------------------------------------------------------------------
+==================================================================================================================================
+Symbol Table: Global                                                             Parent: null
+----------------------------------------------------------------------------------------------------------------------------------
+Name                Type                     Initial Value       Size        Offset      Nested
+----------------------------------------------------------------------------------------------------------------------------------
+checkPrimeNumber    integer                                   4           0          checkPrimeNumber
+main                integer                                   4           4          main
+----------------------------------------------------------------------------------------------------------------------------------
+
+==================================================================================================================================
+Symbol Table: checkPrimeNumber                                                   Parent: Global
+----------------------------------------------------------------------------------------------------------------------------------
+Name                Type                     Initial Value       Size        Offset      Nested
+----------------------------------------------------------------------------------------------------------------------------------
+n                   integer                                   4           0          null
+return              integer                                   4           4          null
+j                   integer                                   4           8          null
+flag                integer                  1                4           12         null
+t00                 integer                  1                4           16         null
+t01                 integer                  2                4           20         null
+t02                 integer                                   4           24         null
+t03                 integer                  2                4           28         null
+t04                 integer                                   4           32         null
+t05                 integer                                   4           36         null
+t06                 integer                  0                4           40         null
+t07                 integer                  0                4           44         null
+t08                 integer                                   4           48         null
+----------------------------------------------------------------------------------------------------------------------------------
+
+==================================================================================================================================
+Symbol Table: main                                                               Parent: Global
+----------------------------------------------------------------------------------------------------------------------------------
+Name                Type                     Initial Value       Size        Offset      Nested
+----------------------------------------------------------------------------------------------------------------------------------
+return              integer                                   4           0          null
+n1                  integer                                   4           4          null
+n2                  integer                                   4           8          null
+i                   integer                                   4           12         null
+flag                integer                                   4           16         null
+printf              integer                                   4           20         null
+t00                 ptr(char)                "Enter two positive integers: "4           24         null
+t01                 integer                                   4           28         null
+scanf               integer                                   4           32         null
+t02                 ptr(char)                "%d %d"          4           36         null
+t03                 ptr(integer)                              4           40         null
+t04                 ptr(integer)                              4           44         null
+t05                 integer                                   4           48         null
+t06                 ptr(char)                "Prime numbers between %d and %d are: "4           52         null
+t07                 integer                                   4           56         null
+t08                 integer                  1                4           60         null
+t09                 integer                                   4           64         null
+t10                 integer                                   4           68         null
+checkPrimeNumber    integer                                   4           72         null
+t11                 integer                                   4           76         null
+t12                 integer                                   4           80         null
+t13                 integer                  1                4           84         null
+t14                 ptr(char)                "%d "            4           88         null
+t15                 integer                                   4           92         null
+t16                 integer                  0                4           96         null
+----------------------------------------------------------------------------------------------------------------------------------
+
