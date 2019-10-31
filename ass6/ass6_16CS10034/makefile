@@ -32,7 +32,7 @@ y.tab.h: ass6_17CS10030_17CS30007.y
 	yacc -dtv ass6_17CS10030_17CS30007.y
 	
 clean:
-	rm lex.yy.c y.tab.c y.tab.h lex.yy.o y.tab.o ass6_17CS10030_17CS30007_translator.o test1 test2 test3 test4 test5 y.output out ass6_17CS10030_17CS30007_target_translator.o libass2_17CS10030_17CS30007.a ass6_17CS10030_17CS30007_1.o ass2_17CS10030_17CS30007.o ass6_17CS10030_17CS30007_2.o ass6_17CS10030_17CS30007_3.o ass6_17CS10030_17CS30007_4.o ass6_17CS10030_17CS30007_5.o ass6_17CS10030_17CS30007_translator.h.gch
+	rm -f lex.yy.c y.tab.c y.tab.h lex.yy.o y.tab.o ass6_17CS10030_17CS30007_translator.o test1 test2 test3 test4 test5 y.output out ass6_17CS10030_17CS30007_target_translator.o libass2_17CS10030_17CS30007.a ass6_17CS10030_17CS30007_1.o ass2_17CS10030_17CS30007.o ass6_17CS10030_17CS30007_2.o ass6_17CS10030_17CS30007_3.o ass6_17CS10030_17CS30007_4.o ass6_17CS10030_17CS30007_5.o ass6_17CS10030_17CS30007_translator.h.gch
 
 
 #Test files
