@@ -1,4 +1,3 @@
-
 //test file to check basic statements, expression, readi and printi library 
 
 //functions created in assignment 2
@@ -11,17 +10,16 @@ int printi(int i);
 int readi(int *eP);
 
 int fibonacci(int n){
-  if(n==1||n==2)return 1;
-  int d=fibonacci(n-1);
-  int c=fibonacci(n-2);
-  int e=d+c;
-  return e;
+  return n;
 }
 
 int main(){
   int n;
+  int *e;
+  e = &n;
+
   prints("Enter a small number :");
-  readi(&n);
+  readi(e);
   a = fibonacci(n);
-  return ;
+  return 0;
 }
