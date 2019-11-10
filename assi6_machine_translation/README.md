@@ -23,3 +23,9 @@ make run<i>
 ```
 ./a.out
 ```
+
+## Clean
+
+```
+make clean
+```
