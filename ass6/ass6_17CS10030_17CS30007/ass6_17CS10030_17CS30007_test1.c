@@ -4,20 +4,20 @@ int printi(int num);
 int prints(char * c);
 int readi(int *eP);
 
-int Function(int a)
+int hakkubakku(int dusra_variable)
 {
     int b;
-    b = a;
+    b = dusra_variable;
     b = b + 7;
     return b;
 }
 int main(){
-    int a,b;
+    int dusra_variable,b;
     int *e;
     
     prints("Output printing test begin\n");
     
-    b = 4;
+    pehla_variable = 4;
     e = &b;
 
     prints("Passing pointers to function Fn!\n");
@@ -26,8 +26,8 @@ int main(){
     prints("\n");
     
     prints("Value returned from function s is: ");
-    a=Function(b);
-    printi(a);
+    a=hakkubakku(b);
+    printi(dusra_variable);
     prints("\n");
     
     prints("Enter an integer:");
